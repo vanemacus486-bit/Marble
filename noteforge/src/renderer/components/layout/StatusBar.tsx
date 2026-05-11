@@ -14,6 +14,19 @@ export default function StatusBar() {
     ? activeTab.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length
     : 0
 
+  const readingTime = activeTab?.content
+    ? (() => {
+        const text = activeTab.content.replace(/<[^>]+>/g, '')
+        const cjkChars = (text.match(/[一-鿿㐀-䶿]/g) || []).length
+        const englishText = text.replace(/[一-鿿㐀-䶿]/g, ' ')
+        const englishWords = englishText.split(/\s+/).filter(Boolean).length
+        const cjkMinutes = cjkChars / 300
+        const englishMinutes = englishWords / 200
+        const totalMinutes = Math.max(cjkMinutes, englishMinutes)
+        return totalMinutes < 1 ? '<1 min read' : `${Math.ceil(totalMinutes)} min read`
+      })()
+    : ''
+
   const editModeShortcut = getEffectiveShortcut('toggle-edit-mode')
   const editModeHint = editModeShortcut ? ` (${formatShortcutKeys(editModeShortcut)})` : ''
 
@@ -30,15 +43,16 @@ export default function StatusBar() {
         {activeTab && (
           <>
             <span>{t('statusbar.words', { count: wordCount })}</span>
+            {readingTime && <span>{readingTime}</span>}
             <button
               className="cursor-pointer rounded px-1 hover:bg-[var(--color-bg-tertiary)]"
               onClick={handleCycleEditMode}
               title={`${t('commandPalette.toggleEditMode')}${editModeHint}`}
             >
-              {activeTab.editMode.toUpperCase()}
+              {activeTab.editMode === 'wysiwyg' ? 'WYSIWYG' : 'Source'}
             </button>
             {activeTab.isDirty && (
-              <span className="text-[var(--color-warning)]">{t('statusbar.unsaved')}</span>
+              <span className="rounded-full bg-[var(--color-warning)] px-2 py-0.5 text-xs text-white">{t('statusbar.unsaved')}</span>
             )}
           </>
         )}

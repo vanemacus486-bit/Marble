@@ -116,9 +116,7 @@ export default function SettingsTabEditor({ onSaved }: Props) {
           value={local.defaultEditMode}
           options={[
             { value: 'wysiwyg', label: 'WYSIWYG' },
-            { value: 'source', label: 'Source' },
-            { value: 'split', label: 'Split' },
-            { value: 'preview', label: 'Preview' },
+            { value: 'source', label: 'Source (HTML)' },
           ]}
           onChange={(v) => update('defaultEditMode', v)}
         />

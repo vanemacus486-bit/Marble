@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { File, Pencil, Trash2, Clipboard, Folder, ChevronLeft, ChevronRight, ChevronDown, Download } from 'lucide-react'
 import { useVaultStore } from '../../stores/vault-store'
 import { useEditorStore } from '../../stores/editor-store'
 import { useUiStore } from '../../stores/ui-store'
@@ -186,25 +187,27 @@ export default function FileExplorer() {
 
   /* ---- Context Menu Builders ---- */
 
+  const iconCls = 'h-3.5 w-3.5'
+
   const getFileMenuItems = useCallback(
     (entry: FileEntry): ContextMenuItem[] => [
       {
         id: 'open',
         label: t('fileExplorer.contextOpen'),
-        icon: '📄',
+        icon: <File className={iconCls} />,
         onClick: () => openNote(entry.path),
       },
       { type: 'separator' },
       {
         id: 'rename',
         label: t('fileExplorer.contextRename'),
-        icon: '✏️',
+        icon: <Pencil className={iconCls} />,
         onClick: () => startRename(entry.path, true),
       },
       {
         id: 'delete',
         label: t('fileExplorer.contextDelete'),
-        icon: '🗑️',
+        icon: <Trash2 className={iconCls} />,
         danger: true,
         onClick: () =>
           setConfirmDelete({ path: entry.path, name: entry.name, isDirectory: false }),
@@ -213,9 +216,19 @@ export default function FileExplorer() {
       {
         id: 'copy-path',
         label: t('fileExplorer.contextCopyPath'),
-        icon: '📋',
+        icon: <Clipboard className={iconCls} />,
         shortcut: 'Ctrl+Shift+C',
         onClick: () => handleCopyPath(entry.path),
+      },
+      {
+        id: 'export-html',
+        label: 'Export as HTML',
+        icon: <Download className={iconCls} />,
+        onClick: async () => {
+          const content = await window.electronAPI.readNote(entry.path)
+          const title = entry.name.replace('.html', '')
+          await window.electronAPI.exportHtmlFile(content, title)
+        },
       },
     ],
     [openNote, startRename, handleCopyPath, t],
@@ -226,26 +239,26 @@ export default function FileExplorer() {
       {
         id: 'new-note',
         label: t('fileExplorer.contextNewNote'),
-        icon: '📄',
+        icon: <File className={iconCls} />,
         onClick: () => setCreateDialogFolder(folderPath),
       },
       {
         id: 'new-folder',
         label: t('fileExplorer.contextNewFolder'),
-        icon: '📁',
+        icon: <Folder className={iconCls} />,
         onClick: () => startRename(`${folderPath}/new-folder`, false),
       },
       { type: 'separator' },
       {
         id: 'rename',
         label: t('fileExplorer.contextRename'),
-        icon: '✏️',
+        icon: <Pencil className={iconCls} />,
         onClick: () => startRename(folderPath, false),
       },
       {
         id: 'delete',
         label: t('fileExplorer.contextDelete'),
-        icon: '🗑️',
+        icon: <Trash2 className={iconCls} />,
         danger: true,
         onClick: () =>
           setConfirmDelete({ path: folderPath, name: folderName, isDirectory: true }),
@@ -254,7 +267,7 @@ export default function FileExplorer() {
       {
         id: 'collapse-all',
         label: t('fileExplorer.contextCollapseAll'),
-        icon: '◀️',
+        icon: <ChevronLeft className={iconCls} />,
         onClick: () => addToast(t('fileExplorer.collapsedAll'), 'info'),
       },
     ],
@@ -266,13 +279,13 @@ export default function FileExplorer() {
       {
         id: 'new-note',
         label: t('fileExplorer.contextNewNote'),
-        icon: '📄',
+        icon: <File className={iconCls} />,
         onClick: () => setCreateDialogFolder(undefined),
       },
       {
         id: 'new-folder',
         label: t('fileExplorer.contextNewFolder'),
-        icon: '📁',
+        icon: <Folder className={iconCls} />,
         onClick: () => startRename('new-folder', false),
       },
     ],
@@ -530,7 +543,7 @@ function FolderTree({
             setExpanded(!expanded)
           }}
         >
-          {expanded ? '▼' : '▶'}
+          {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
         </button>
 
         {isRenaming ? (

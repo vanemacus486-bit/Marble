@@ -8,13 +8,14 @@ import {
   type ReactNode,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { ChevronRight } from 'lucide-react'
 
 /* ---- Types ---- */
 
 export type ContextMenuActionItem = {
   id: string
   label: string
-  icon?: string
+  icon?: ReactNode
   shortcut?: string
   disabled?: boolean
   danger?: boolean
@@ -280,8 +281,7 @@ function ContextMenuItemRow({
           }
         }}
       >
-        {item.icon && <span className="w-4 text-center text-xs">{item.icon}</span>}
-        {!item.icon && <span className="w-4" />}
+        <span className="flex h-4 w-4 items-center justify-center">{item.icon}</span>
 
         <span className="flex-1 truncate">{item.label}</span>
 
@@ -289,7 +289,7 @@ function ContextMenuItemRow({
           <span className="ml-4 text-xs text-[var(--color-text-muted)]">{item.shortcut}</span>
         )}
 
-        {hasSubmenu && <span className="ml-1 text-xs text-[var(--color-text-muted)]">&#9654;</span>}
+        {hasSubmenu && <ChevronRight className="ml-1 h-3 w-3 text-[var(--color-text-muted)]" />}
       </button>
 
       {/* Submenu */}
@@ -329,8 +329,7 @@ function ContextMenuItemRow({
                   onClose()
                 }}
               >
-                {child.icon && <span className="w-4 text-center text-xs">{child.icon}</span>}
-                {!child.icon && <span className="w-4" />}
+                <span className="flex h-4 w-4 items-center justify-center">{child.icon}</span>
                 <span className="flex-1 truncate">{child.label}</span>
                 {child.shortcut && (
                   <span className="ml-4 text-xs text-[var(--color-text-muted)]">{child.shortcut}</span>

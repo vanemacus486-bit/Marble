@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { FolderTree, Search, Tags } from 'lucide-react'
 import { useUiStore } from '../../stores/ui-store'
 import FileExplorer from '../vault/FileExplorer'
 import SearchBar from '../search/SearchBar'
@@ -11,9 +12,9 @@ export default function Sidebar() {
   const width = useUiStore((s) => s.leftSidebarWidth)
 
   const tabs = [
-    { id: 'explorer' as const, label: t('sidebar.files'), icon: '📁' },
-    { id: 'search' as const, label: t('sidebar.search'), icon: '🔍' },
-    { id: 'tags' as const, label: t('sidebar.tags'), icon: '🏷' },
+    { id: 'explorer' as const, label: t('sidebar.files'), icon: <FolderTree className="h-3.5 w-3.5" /> },
+    { id: 'search' as const, label: t('sidebar.search'), icon: <Search className="h-3.5 w-3.5" /> },
+    { id: 'tags' as const, label: t('sidebar.tags'), icon: <Tags className="h-3.5 w-3.5" /> },
   ]
 
   return (

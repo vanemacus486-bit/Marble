@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useEditorStore } from '../../stores/editor-store'
 import { useVaultStore } from '../../stores/vault-store'
 import type { Link } from '../../types'
 
 export default function BacklinksPanel() {
+  const { t } = useTranslation()
   const activeTab = useEditorStore((s) => s.activeTab())
   const notes = useVaultStore((s) => s.notes)
   const getBacklinks = useVaultStore((s) => s.getBacklinks)
@@ -35,7 +37,7 @@ export default function BacklinksPanel() {
   if (!notePath) {
     return (
       <div className="p-3 text-center text-sm text-[var(--color-text-muted)]">
-        No note selected
+        {t('backlinks.noNoteSelected')}
       </div>
     )
   }
@@ -43,7 +45,7 @@ export default function BacklinksPanel() {
   if (backlinks.length === 0 && unlinkedMentions.length === 0) {
     return (
       <div className="p-3 text-center text-sm text-[var(--color-text-muted)]">
-        No backlinks
+        {t('backlinks.noBacklinks')}
       </div>
     )
   }
@@ -52,7 +54,7 @@ export default function BacklinksPanel() {
     <div className="flex flex-col">
       {/* Backlinks count */}
       <div className="border-b border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]">
-        Backlinks ({backlinks.length})
+        {t('backlinks.count', { count: backlinks.length })}
       </div>
 
       {backlinks.length > 0 && (
@@ -83,7 +85,7 @@ export default function BacklinksPanel() {
       {unlinkedMentions.length > 0 && (
         <>
           <div className="border-b border-t border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]">
-            Unlinked Mentions ({unlinkedMentions.length})
+            {t('backlinks.unlinkedMentions', { count: unlinkedMentions.length })}
           </div>
           <div className="py-1">
             {unlinkedMentions.map((note) => (

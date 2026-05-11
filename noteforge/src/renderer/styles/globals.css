@@ -5,17 +5,18 @@
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f8f9fa;
   --color-bg-tertiary: #e9ecef;
-  --color-text-primary: #212529;
+  --color-text-primary: #1a1a2e;
   --color-text-secondary: #495057;
   --color-text-muted: #868e96;
   --color-border: #dee2e6;
-  --color-accent: #7950f2;
-  --color-accent-hover: #6741d9;
-  --color-link: #1c7ed6;
-  --color-link-visited: #7950f2;
-  --color-success: #2f9e44;
-  --color-warning: #f08c00;
-  --color-danger: #e03131;
+  --color-accent: #7c3aed;
+  --color-accent-hover: #6d28d9;
+  --color-accent-subtle: #f5f3ff;
+  --color-link: #2563eb;
+  --color-link-visited: #7c3aed;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
   --radius-sm: 4px;
@@ -24,23 +25,26 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
 }
 
 .dark {
-  --color-bg-primary: #1a1b1e;
-  --color-bg-secondary: #25262b;
-  --color-bg-tertiary: #2c2e33;
-  --color-text-primary: #e9ecef;
-  --color-text-secondary: #ced4da;
-  --color-text-muted: #868e96;
-  --color-border: #373a40;
-  --color-accent: #9775fa;
-  --color-accent-hover: #b197fc;
-  --color-link: #4dabf7;
-  --color-link-visited: #b197fc;
-  --color-success: #51cf66;
-  --color-warning: #ffd43b;
-  --color-danger: #ff6b6b;
+  --color-bg-primary: #0f0f11;
+  --color-bg-secondary: #18181b;
+  --color-bg-tertiary: #27272a;
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-border: #27272a;
+  --color-accent: #8b5cf6;
+  --color-accent-hover: #a78bfa;
+  --color-accent-subtle: #1e1b4b;
+  --color-link: #60a5fa;
+  --color-link-visited: #a78bfa;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
 }
 
 html, body, #root {
@@ -88,4 +92,9 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Smooth transitions for interactive elements */
+a, button, input, select, textarea {
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
 }

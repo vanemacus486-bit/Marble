@@ -80,6 +80,8 @@ const api = {
   // Export
   exportPlaintext: (html: string): Promise<string> =>
     ipcRenderer.invoke(IPC_CHANNELS.EXPORT_PLAINTEXT, html),
+  exportHtmlFile: (html: string, title: string): Promise<boolean> =>
+    ipcRenderer.invoke(IPC_CHANNELS.EXPORT_HTML_FILE, html, title),
 
   // System
   getAppVersion: (): Promise<string> =>

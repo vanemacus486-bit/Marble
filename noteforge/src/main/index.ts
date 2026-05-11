@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, session, ipcMain, dialog } from 'electron'
 import { join, resolve as pathResolve } from 'path'
+import fs from 'fs/promises'
 import { VaultManager } from './services/vault-manager'
 import { NoteParser } from './services/note-parser'
 import { ConfigManager } from './services/config-manager'
@@ -211,6 +212,18 @@ function registerAllIpc(): void {
   // Export
   ipcMain.handle(IPC_CHANNELS.EXPORT_PLAINTEXT, async (_e, html: string) => exportService.plaintext(html))
   ipcMain.handle(IPC_CHANNELS.EXPORT_MARKDOWN, async (_e, html: string) => exportService.markdown(html))
+  ipcMain.handle(IPC_CHANNELS.EXPORT_HTML, async (_e, html: string, title?: string) => exportService.htmlPage(html, title))
+  ipcMain.handle(IPC_CHANNELS.EXPORT_HTML_FILE, async (_e, html: string, title: string) => {
+    const page = exportService.htmlPage(html, title)
+    const result = await dialog.showSaveDialog(mainWindow!, {
+      defaultPath: `${title || 'note'}.html`,
+      filters: [{ name: 'HTML Files', extensions: ['html'] }],
+    })
+    if (!result.canceled && result.filePath) {
+      await fs.writeFile(result.filePath, page, 'utf-8')
+    }
+    return !result.canceled
+  })
 
   // System
   ipcMain.handle(IPC_CHANNELS.SYSTEM_GET_VERSION, () => app.getVersion())

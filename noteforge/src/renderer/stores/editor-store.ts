@@ -5,7 +5,7 @@ interface EditorTab {
   id: string
   notePath: string
   title: string
-  editMode: 'wysiwyg' | 'source' | 'split' | 'preview'
+  editMode: 'wysiwyg' | 'source'
   isDirty: boolean
   content: string | null
   savedContent: string | null
@@ -41,7 +41,7 @@ interface EditorState {
   autoSave: (tabId: string) => Promise<void>
 
   // Mode
-  setEditMode: (tabId: string, mode: 'wysiwyg' | 'source' | 'split' | 'preview') => void
+  setEditMode: (tabId: string, mode: 'wysiwyg' | 'source') => void
   toggleEditMode: (tabId: string) => void
 
   // Split pane
@@ -86,7 +86,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const tab: EditorTab = {
       id: generateTabId(),
       notePath,
-      title: props.title || notePath.split('/').pop()?.replace('.html', '') || 'Untitled',
+      title: (() => { const m = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i); return m ? m[1].trim() : (props.title || notePath.split('/').pop()?.replace('.html', '') || 'Untitled') })(),
       editMode: 'wysiwyg',
       isDirty: false,
       content,
@@ -172,12 +172,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set((s) => ({
       tabs: s.tabs.map((t) => {
         if (t.id !== tabId) return t
-        const next: Record<string, 'wysiwyg' | 'source' | 'preview'> = {
-          wysiwyg: 'source',
-          source: 'preview',
-          preview: 'wysiwyg',
-        }
-        return { ...t, editMode: next[t.editMode] ?? 'wysiwyg' }
+        return { ...t, editMode: t.editMode === 'wysiwyg' ? 'source' : 'wysiwyg' }
       }),
     }))
   },

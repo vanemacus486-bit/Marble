@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Brain } from 'lucide-react'
 import {
   forceSimulation,
   forceLink,
@@ -180,7 +181,7 @@ export default function GraphCanvas() {
   if (srcNodes.length === 0) {
     return (
       <div className="graph-empty">
-        <div className="graph-empty-icon">&#x1F4AD;</div>
+        <Brain className="graph-empty-icon h-12 w-12" />
         <div className="graph-empty-text">No notes to display</div>
       </div>
     )

@@ -45,6 +45,8 @@ export const IPC_CHANNELS = {
   EXPORT_PLAINTEXT: 'export:plaintext',
   EXPORT_PDF: 'export:pdf',
   EXPORT_MARKDOWN: 'export:markdown',
+  EXPORT_HTML: 'export:html',
+  EXPORT_HTML_FILE: 'export:html-file',
 
   // System
   SYSTEM_GET_VERSION: 'system:get-version',

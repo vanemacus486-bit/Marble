@@ -8,12 +8,12 @@ directories:
 
 files:
   - out/**/*
-  - "!out/renderer/**/*"
 
 win:
   target:
-    - nsis
+    - portable
   icon: resources/icon.ico
+  signAndEditExecutable: false
 
 mac:
   target:

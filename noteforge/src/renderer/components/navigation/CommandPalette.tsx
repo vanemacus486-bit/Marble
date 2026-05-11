@@ -67,6 +67,26 @@ export default function CommandPalette() {
       id: 'search', label: 'Global search', shortcutId: 'search',
       action: () => useSearchStore.getState().setOpen(true),
     },
+    {
+      id: 'export-html', label: 'Export current note as HTML',
+      action: async () => {
+        const tab = useEditorStore.getState().activeTab()
+        if (tab) {
+          await window.electronAPI.exportHtmlFile(tab.content || '', tab.title)
+        }
+        useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
+    {
+      id: 'reveal-in-folder', label: 'Reveal in file explorer',
+      action: () => {
+        const tab = useEditorStore.getState().activeTab()
+        if (tab) {
+          window.electronAPI.showInFolder(tab.notePath)
+        }
+        useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
   ]
 
   const getShortcutText = (shortcutId?: string): string => {
@@ -75,8 +95,18 @@ export default function CommandPalette() {
     return keys ? formatShortcutKeys(keys) : ''
   }
 
+  const fuzzyMatch = (query: string, label: string): boolean => {
+    const q = query.toLowerCase()
+    const l = label.toLowerCase()
+    let qi = 0
+    for (let i = 0; i < l.length && qi < q.length; i++) {
+      if (l[i] === q[qi]) qi++
+    }
+    return qi === q.length
+  }
+
   const filtered = query
-    ? commands.filter((c) => c.label.toLowerCase().includes(query.toLowerCase()))
+    ? commands.filter((c) => fuzzyMatch(query, c.label))
     : commands
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

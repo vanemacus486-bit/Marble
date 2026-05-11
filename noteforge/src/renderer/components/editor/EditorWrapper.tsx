@@ -21,13 +21,14 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { common, createLowlight } from 'lowlight'
 import { useEditorStore } from '../../stores/editor-store'
+import FloatingToolbar from './FloatingToolbar'
 
 const lowlight = createLowlight(common)
 
 interface EditorWrapperProps {
   tabId: string
   content: string
-  editMode: 'wysiwyg' | 'source' | 'split'
+  editMode: 'wysiwyg' | 'source'
 }
 
 export default function EditorWrapper({ tabId, content, editMode }: EditorWrapperProps) {
@@ -85,6 +86,7 @@ export default function EditorWrapper({ tabId, content, editMode }: EditorWrappe
   return (
     <div className="h-full overflow-y-auto px-6 py-4">
       <EditorContent editor={editor} className="min-h-full" />
+      <FloatingToolbar editor={editor} />
     </div>
   )
 }

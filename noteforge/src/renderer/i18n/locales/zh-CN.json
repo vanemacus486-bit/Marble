@@ -5,7 +5,10 @@
 
   "statusbar.noVault": "无仓库",
   "statusbar.words": "字数：{{count}}",
+  "statusbar.readingTime": "约 {{time}} 分钟",
   "statusbar.unsaved": "未保存",
+  "statusbar.wysiwyg": "所见即所得",
+  "statusbar.source": "源码",
 
   "tabbar.unsavedTitle": "未保存的更改",
   "tabbar.unsavedMessage": "您有未保存的更改。关闭前是否保存？",
@@ -204,12 +207,12 @@
   "commandPalette.closeCurrentTab": "关闭当前标签页",
 
   "backlinks.noNoteSelected": "未选择笔记",
-  "backlinks.noBacklinks": "无反向链接",
+  "backlinks.noBacklinks": "暂无笔记链接到此 — 使用 [[ 可从其他笔记创建链接",
   "backlinks.count": "反向链接（{{count}}）",
   "backlinks.unlinkedMentions": "未链接提及（{{count}}）",
 
   "outline.noNoteSelected": "未选择笔记",
-  "outline.noHeadings": "无标题",
+  "outline.noHeadings": "暂无标题 — 添加标题以构建笔记结构",
   "outline.count": "大纲（{{count}}）",
 
   "propertiesPanel.title": "属性",

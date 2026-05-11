@@ -35,7 +35,7 @@ export function useNote(notePath: string | null) {
     editMode: tab?.editMode ?? 'wysiwyg',
     setContent,
     save,
-    setEditMode: tab ? (mode: 'wysiwyg' | 'source' | 'split') => store.setEditMode(tab.id, mode) : undefined,
+    setEditMode: tab ? (mode: 'wysiwyg' | 'source') => store.setEditMode(tab.id, mode) : undefined,
     toggleEditMode: tab ? () => store.toggleEditMode(tab.id) : undefined,
   }
 }

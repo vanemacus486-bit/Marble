@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useEditorStore } from '../../stores/editor-store'
 
 interface HeadingEntry {
@@ -26,6 +27,7 @@ function parseHeadings(html: string): HeadingEntry[] {
 }
 
 export default function OutlinePanel() {
+  const { t } = useTranslation()
   const activeTab = useEditorStore((s) => s.activeTab())
 
   const headings = useMemo(() => {
@@ -36,7 +38,7 @@ export default function OutlinePanel() {
   if (!activeTab) {
     return (
       <div className="p-3 text-center text-sm text-[var(--color-text-muted)]">
-        No note selected
+        {t('outline.noNoteSelected')}
       </div>
     )
   }
@@ -44,7 +46,7 @@ export default function OutlinePanel() {
   if (headings.length === 0) {
     return (
       <div className="p-3 text-center text-sm text-[var(--color-text-muted)]">
-        No headings
+        {t('outline.noHeadings')}
       </div>
     )
   }
@@ -61,7 +63,7 @@ export default function OutlinePanel() {
   return (
     <div className="flex flex-col">
       <div className="border-b border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]">
-        Outline ({headings.length})
+        {t('outline.count', { count: headings.length })}
       </div>
       <div className="py-1">
         {headings.map((h, i) => (

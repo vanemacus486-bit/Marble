@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Info, FileText, FolderOpen, Palette, Keyboard, X } from 'lucide-react'
 import SettingsTabAbout from './SettingsTabAbout'
 import SettingsTabEditor from './SettingsTabEditor'
 import SettingsTabFilesLinks from './SettingsTabFilesLinks'
@@ -15,12 +16,12 @@ type SettingsTab = 'about' | 'editor' | 'files-links' | 'appearance' | 'shortcut
 export default function SettingsDialog({ onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
 
-  const tabs: { id: SettingsTab; label: string; icon: string }[] = [
-    { id: 'about', label: t('settings.about'), icon: '?' },
-    { id: 'editor', label: t('settings.editor'), icon: 'P' },
-    { id: 'files-links', label: t('settings.filesAndLinks'), icon: 'F' },
-    { id: 'appearance', label: t('settings.appearance'), icon: 'A' },
-    { id: 'shortcuts', label: t('settings.keyboardShortcuts'), icon: 'K' },
+  const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'about', label: t('settings.about'), icon: <Info className="h-4 w-4" /> },
+    { id: 'editor', label: t('settings.editor'), icon: <FileText className="h-4 w-4" /> },
+    { id: 'files-links', label: t('settings.filesAndLinks'), icon: <FolderOpen className="h-4 w-4" /> },
+    { id: 'appearance', label: t('settings.appearance'), icon: <Palette className="h-4 w-4" /> },
+    { id: 'shortcuts', label: t('settings.keyboardShortcuts'), icon: <Keyboard className="h-4 w-4" /> },
   ]
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('about')
@@ -72,7 +73,7 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
                 }`}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <span className="flex h-6 w-6 items-center justify-center rounded bg-[var(--color-bg-tertiary)] text-xs font-bold text-[var(--color-text-muted)]">
+                <span className={`flex h-6 w-6 items-center justify-center rounded text-xs ${activeTab === tab.id ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)]'}`}>
                   {tab.icon}
                 </span>
                 <span>{tab.label}</span>
@@ -99,7 +100,7 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
                 onClick={onClose}
                 aria-label={t('settings.close')}
               >
-                X
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useEditorStore } from '../../stores/editor-store'
 import { useVaultStore } from '../../stores/vault-store'
 import { useUiStore } from '../../stores/ui-store'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { X, Plus } from 'lucide-react'
 import { getEffectiveShortcut, formatShortcutKeys } from '../../config/shortcuts'
 
 export default function TabBar() {
@@ -91,18 +92,19 @@ export default function TabBar() {
                   ? 'bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]'
                   : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)]'
               }`}
+              title={tab.notePath}
               onClick={() => setActiveTab(tab.id)}
               onContextMenu={(e) => handleContextMenu(tab.id, e)}
             >
               {tab.isDirty && (
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+                <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" />
               )}
               <span className="truncate max-w-40">{tab.title}</span>
               <span
                 className="ml-1 rounded p-0.5 opacity-0 hover:bg-[var(--color-bg-tertiary)] group-hover:opacity-100"
                 onClick={(e) => handleClose(tab.id, e)}
               >
-                ✕
+                <X className="h-3 w-3" />
               </span>
             </button>
           ))}
@@ -113,7 +115,7 @@ export default function TabBar() {
           onClick={handleCreateNote}
           title={`New note${newNoteHint}`}
         >
-          +
+          <Plus className="h-4 w-4" />
         </button>
       </div>
 

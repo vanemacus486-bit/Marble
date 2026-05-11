@@ -5,7 +5,10 @@
 
   "statusbar.noVault": "No vault",
   "statusbar.words": "Words: {{count}}",
+  "statusbar.readingTime": "{{time}} min read",
   "statusbar.unsaved": "Unsaved",
+  "statusbar.wysiwyg": "WYSIWYG",
+  "statusbar.source": "Source",
 
   "tabbar.unsavedTitle": "Unsaved changes",
   "tabbar.unsavedMessage": "You have unsaved changes. Save before closing?",
@@ -204,12 +207,12 @@
   "commandPalette.closeCurrentTab": "Close current tab",
 
   "backlinks.noNoteSelected": "No note selected",
-  "backlinks.noBacklinks": "No backlinks",
+  "backlinks.noBacklinks": "No notes link here yet — use [[ to create a link from another note",
   "backlinks.count": "Backlinks ({{count}})",
   "backlinks.unlinkedMentions": "Unlinked Mentions ({{count}})",
 
   "outline.noNoteSelected": "No note selected",
-  "outline.noHeadings": "No headings",
+  "outline.noHeadings": "No headings found — add headings to structure your note",
   "outline.count": "Outline ({{count}})",
 
   "propertiesPanel.title": "Properties",

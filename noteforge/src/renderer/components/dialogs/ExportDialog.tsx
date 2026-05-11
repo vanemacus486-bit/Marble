@@ -6,7 +6,7 @@ interface ExportDialogProps {
   html: string
 }
 
-type ExportFormat = 'plaintext' | 'markdown'
+type ExportFormat = 'plaintext' | 'markdown' | 'html'
 
 export default function ExportDialog({ onClose, html }: ExportDialogProps) {
   const [format, setFormat] = useState<ExportFormat>('plaintext')
@@ -26,6 +26,9 @@ export default function ExportDialog({ onClose, html }: ExportDialogProps) {
         // Convert HTML to Markdown via Turndown, then copy
         const content = await convertHtmlToMarkdown(html)
         await copyToClipboard(content)
+      } else if (format === 'html') {
+        // Save HTML as file via save dialog
+        await window.electronAPI.exportHtmlFile(html, '')
       }
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -77,6 +80,7 @@ export default function ExportDialog({ onClose, html }: ExportDialogProps) {
               [
                 { id: 'plaintext', label: 'Plain Text' },
                 { id: 'markdown', label: 'Markdown' },
+                { id: 'html', label: 'HTML Page' },
               ] as { id: ExportFormat; label: string }[]
             ).map((opt) => (
               <button
@@ -113,7 +117,7 @@ export default function ExportDialog({ onClose, html }: ExportDialogProps) {
             onClick={handleExport}
             disabled={isExporting}
           >
-            {isExporting ? 'Exporting...' : copied ? 'Copied!' : `Export & Copy`}
+            {isExporting ? 'Exporting...' : copied ? 'Copied!' : format === 'html' ? 'Export HTML File' : `Export & Copy`}
           </button>
         </div>
       </div>
