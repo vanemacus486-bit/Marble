@@ -11,6 +11,7 @@ interface UiState {
   leftSidebarTab: LeftSidebarTab
   rightSidebarTab: RightSidebarTab
   theme: 'light' | 'dark' | 'system'
+  locale: string
   commandPaletteOpen: boolean
   quickSwitcherOpen: boolean
   settingsOpen: boolean
@@ -23,6 +24,7 @@ interface UiState {
   setLeftSidebarTab: (tab: LeftSidebarTab) => void
   setRightSidebarTab: (tab: RightSidebarTab) => void
   setTheme: (theme: 'light' | 'dark' | 'system') => void
+  setLocale: (locale: string) => void
   setCommandPaletteOpen: (open: boolean) => void
   setQuickSwitcherOpen: (open: boolean) => void
   setSettingsOpen: (open: boolean) => void
@@ -42,6 +44,7 @@ export const useUiStore = create<UiState>((set) => ({
   leftSidebarTab: 'explorer',
   rightSidebarTab: 'backlinks',
   theme: 'system',
+  locale: 'en-US',
   commandPaletteOpen: false,
   quickSwitcherOpen: false,
   settingsOpen: false,
@@ -59,6 +62,10 @@ export const useUiStore = create<UiState>((set) => ({
     set({ theme })
     document.documentElement.classList.toggle('dark', theme === 'dark' ||
       (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches))
+  },
+  setLocale: (locale) => {
+    set({ locale })
+    window.electronAPI.setAppConfig({ locale }).catch(() => {})
   },
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   setQuickSwitcherOpen: (open) => set({ quickSwitcherOpen: open }),

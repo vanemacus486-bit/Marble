@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import { useUiStore } from '../../stores/ui-store'
 import { useEditorStore } from '../../stores/editor-store'
 import { useGraphStore } from '../../stores/graph-store'
+import { useSearchStore } from '../../stores/search-store'
+import { getEffectiveShortcut, formatShortcutKeys } from '../../config/shortcuts'
 
 interface Command {
   id: string
   label: string
-  shortcut?: string
+  shortcutId?: string
   action: () => void
 }
 
@@ -21,14 +23,57 @@ export default function CommandPalette() {
   }, [])
 
   const commands: Command[] = [
-    { id: 'toggle-sidebar', label: 'Toggle left sidebar', shortcut: 'Ctrl+\\', action: () => useUiStore.getState().toggleLeftSidebar() },
-    { id: 'toggle-right-sidebar', label: 'Toggle right sidebar', shortcut: 'Ctrl+Shift+\\', action: () => useUiStore.getState().toggleRightSidebar() },
-    { id: 'toggle-graph', label: 'Toggle graph view', shortcut: 'Ctrl+Shift+M', action: () => useGraphStore.getState().setVisible(!useGraphStore.getState().isVisible) },
-    { id: 'save', label: 'Save current note', shortcut: 'Ctrl+S', action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().saveNote(t.id) }},
-    { id: 'toggle-edit-mode', label: 'Toggle edit mode', shortcut: 'Ctrl+E', action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().toggleEditMode(t.id) }},
-    { id: 'settings', label: 'Open settings', shortcut: 'Ctrl+,', action: () => useUiStore.getState().setSettingsOpen(true) },
-    { id: 'close-tab', label: 'Close current tab', shortcut: 'Ctrl+W', action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().closeTab(t.id) }},
+    {
+      id: 'toggle-sidebar', label: 'Toggle left sidebar', shortcutId: 'toggle-left-sidebar',
+      action: () => useUiStore.getState().toggleLeftSidebar(),
+    },
+    {
+      id: 'toggle-right-sidebar', label: 'Toggle right sidebar', shortcutId: 'toggle-right-sidebar',
+      action: () => useUiStore.getState().toggleRightSidebar(),
+    },
+    {
+      id: 'toggle-graph', label: 'Toggle graph view', shortcutId: 'toggle-graph',
+      action: () => useGraphStore.getState().setVisible(!useGraphStore.getState().isVisible),
+    },
+    {
+      id: 'save', label: 'Save current note', shortcutId: 'save',
+      action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().saveNote(t.id) },
+    },
+    {
+      id: 'toggle-edit-mode', label: 'Toggle edit mode', shortcutId: 'toggle-edit-mode',
+      action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().toggleEditMode(t.id) },
+    },
+    {
+      id: 'settings', label: 'Open settings', shortcutId: 'settings',
+      action: () => useUiStore.getState().setSettingsOpen(true),
+    },
+    {
+      id: 'close-tab', label: 'Close current tab', shortcutId: 'close-tab',
+      action: () => { const t = useEditorStore.getState().activeTab(); if (t) useEditorStore.getState().closeTab(t.id) },
+    },
+    {
+      id: 'new-note', label: 'New note', shortcutId: 'new-note',
+      action: () => useUiStore.getState().addToast('Create a note from the file explorer', 'info'),
+    },
+    {
+      id: 'new-folder', label: 'New folder', shortcutId: 'new-folder',
+      action: () => useUiStore.getState().addToast('Create a folder from the file explorer', 'info'),
+    },
+    {
+      id: 'find', label: 'Find in note', shortcutId: 'find',
+      action: () => useEditorStore.getState().showFindReplace(),
+    },
+    {
+      id: 'search', label: 'Global search', shortcutId: 'search',
+      action: () => useSearchStore.getState().setOpen(true),
+    },
   ]
+
+  const getShortcutText = (shortcutId?: string): string => {
+    if (!shortcutId) return ''
+    const keys = getEffectiveShortcut(shortcutId)
+    return keys ? formatShortcutKeys(keys) : ''
+  }
 
   const filtered = query
     ? commands.filter((c) => c.label.toLowerCase().includes(query.toLowerCase()))
@@ -56,22 +101,25 @@ export default function CommandPalette() {
           onKeyDown={handleKeyDown}
         />
         <div className="max-h-80 overflow-y-auto">
-          {filtered.map((cmd, i) => (
-            <button
-              key={cmd.id}
-              className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm transition-colors ${
-                i === selectedIndex
-                  ? 'bg-[var(--color-accent)] text-white'
-                  : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-              }`}
-              onClick={() => { cmd.action(); close() }}
-            >
-              <span>{cmd.label}</span>
-              {cmd.shortcut && (
-                <span className="ml-2 text-xs opacity-60">{cmd.shortcut}</span>
-              )}
-            </button>
-          ))}
+          {filtered.map((cmd, i) => {
+            const shortcutText = getShortcutText(cmd.shortcutId)
+            return (
+              <button
+                key={cmd.id}
+                className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm transition-colors ${
+                  i === selectedIndex
+                    ? 'bg-[var(--color-accent)] text-white'
+                    : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
+                }`}
+                onClick={() => { cmd.action(); close() }}
+              >
+                <span>{cmd.label}</span>
+                {shortcutText && (
+                  <span className="ml-2 text-xs opacity-60">{shortcutText}</span>
+                )}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

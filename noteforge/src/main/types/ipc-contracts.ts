@@ -46,6 +46,7 @@ export interface VaultConfig {
     excludeFolders: string[]
     fileWatcher: boolean
   }
+  shortcuts: Record<string, { key: string; ctrl?: boolean; shift?: boolean; alt?: boolean } | undefined>
 }
 
 export function defaultVaultConfig(): VaultConfig {
@@ -86,6 +87,7 @@ export function defaultVaultConfig(): VaultConfig {
       excludeFolders: ['.git', 'node_modules', '.marble'],
       fileWatcher: true,
     },
+    shortcuts: {},
   }
 }
 

@@ -1,3 +1,4 @@
+import './i18n'
 import AppShell from './components/layout/AppShell'
 import './styles/theme-light.css'
 import './styles/theme-dark.css'

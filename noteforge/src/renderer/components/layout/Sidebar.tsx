@@ -1,18 +1,20 @@
+import { useTranslation } from 'react-i18next'
 import { useUiStore } from '../../stores/ui-store'
 import FileExplorer from '../vault/FileExplorer'
 import SearchBar from '../search/SearchBar'
 import TagPanel from '../panels/TagPanel'
 
-const tabs = [
-  { id: 'explorer' as const, label: 'Files', icon: '📁' },
-  { id: 'search' as const, label: 'Search', icon: '🔍' },
-  { id: 'tags' as const, label: 'Tags', icon: '🏷' },
-]
-
 export default function Sidebar() {
+  const { t } = useTranslation()
   const tab = useUiStore((s) => s.leftSidebarTab)
   const setTab = useUiStore((s) => s.setLeftSidebarTab)
   const width = useUiStore((s) => s.leftSidebarWidth)
+
+  const tabs = [
+    { id: 'explorer' as const, label: t('sidebar.files'), icon: '📁' },
+    { id: 'search' as const, label: t('sidebar.search'), icon: '🔍' },
+    { id: 'tags' as const, label: t('sidebar.tags'), icon: '🏷' },
+  ]
 
   return (
     <div

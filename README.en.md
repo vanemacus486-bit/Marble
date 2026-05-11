@@ -57,6 +57,8 @@ Powerful **TipTap** (ProseMirror) editor with:
 
 ### 📂 File Management
 - Tree-based folder navigation with inline folder creation
+- Right-click context menu: New Note/Folder, Rename, Delete, Copy Path
+- Inline rename (Enter to confirm, Escape to cancel)
 - Note create, rename, delete
 - Automatic file watching (Chokidar) with real-time index updates
 
@@ -90,11 +92,25 @@ Force-directed graph visualization with **D3-force**:
 - Light / Dark / System-follow three modes
 - CSS custom properties driven, easy to extend
 
+### 🌐 Internationalization
+- Chinese (zh-CN) and English (en-US) interface switching
+- Full i18n powered by i18next
+- Language preference persisted across sessions
+
+### ⚙️ Enhanced Settings
+- Sidebar-navigated five-tab settings panel: About, Editor, Files & Links, Appearance, Shortcuts
+- Editor: Font family, size, line height, tab size, spellcheck, default edit mode
+- Files & Links: Auto-save interval, daily notes folder, file watcher, excluded folders
+- Appearance: Theme mode, language switcher, UI font size, custom CSS
+- Shortcuts: Searchable & filterable, recording mode for rebinding, conflict detection, reset to defaults
+
 ### ⌨️ Keyboard Shortcuts
 | Shortcut | Action |
 |---|---|
 | `Ctrl+P` | Quick note switcher |
 | `Ctrl+Shift+P` | Command palette |
+| `Ctrl+N` | New note |
+| `Ctrl+Shift+N` | New folder |
 | `Ctrl+\` | Toggle sidebar |
 | `Ctrl+Shift+\` | Toggle right panel |
 | `Ctrl+W` | Close current tab |
@@ -104,6 +120,9 @@ Force-directed graph visualization with **D3-force**:
 | `Ctrl+Shift+F` | Full-text search |
 | `Ctrl+,` | Settings |
 | `Ctrl+Tab` / `Shift+Ctrl+Tab` | Cycle tabs |
+| `F2` | Rename |
+| `Delete` | Delete |
+| `Ctrl+Shift+G` | Knowledge graph |
 
 ---
 
@@ -157,6 +176,7 @@ npm run lint         # Lint code
 | **Renderer** | React 18 + TypeScript 5.5 |
 | **State Management** | Zustand 5 |
 | **Rich Text Editor** | TipTap 2.11 (ProseMirror), 30+ extensions |
+| **i18n** | i18next + react-i18next |
 | **Styling** | Tailwind CSS v4 (Vite plugin) |
 | **HTML Parsing** | htmlparser2 + domutils |
 | **Full-Text Search** | FlexSearch 0.7 |
