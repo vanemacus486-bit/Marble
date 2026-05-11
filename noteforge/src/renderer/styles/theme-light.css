@@ -1,0 +1,20 @@
+/* Light theme — override CSS custom properties */
+:root {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #e9ecef;
+  --color-text-primary: #212529;
+  --color-text-secondary: #495057;
+  --color-text-muted: #868e96;
+  --color-border: #dee2e6;
+  --color-accent: #7950f2;
+  --color-accent-hover: #6741d9;
+  --color-link: #1c7ed6;
+  --color-link-visited: #7950f2;
+  --color-success: #2f9e44;
+  --color-warning: #f08c00;
+  --color-danger: #e03131;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}

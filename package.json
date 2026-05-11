@@ -1,0 +1,14 @@
+{
+  "name": "marble-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Marble — HTML-Native Knowledge Management",
+  "scripts": {
+    "dev": "npm --prefix noteforge run dev",
+    "build": "npm --prefix noteforge run build",
+    "preview": "npm --prefix noteforge run preview",
+    "test": "npm --prefix noteforge run test",
+    "typecheck": "npm --prefix noteforge run typecheck",
+    "postinstall": "npm --prefix noteforge install"
+  }
+}

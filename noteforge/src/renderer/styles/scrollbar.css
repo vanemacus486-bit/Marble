@@ -1,0 +1,7 @@
+/* Custom scrollbar — already handled in globals.css via ::-webkit-scrollbar */
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}

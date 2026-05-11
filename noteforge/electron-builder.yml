@@ -1,0 +1,32 @@
+appId: com.marble.app
+productName: Marble
+copyright: Copyright 2026 Marble
+
+directories:
+  output: dist
+  buildResources: resources
+
+files:
+  - out/**/*
+  - "!out/renderer/**/*"
+
+win:
+  target:
+    - nsis
+  icon: resources/icon.ico
+
+mac:
+  target:
+    - dmg
+  icon: resources/icon.icns
+  category: public.app-category.productivity
+
+linux:
+  target:
+    - AppImage
+  icon: resources/icon.png
+  category: Office
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
