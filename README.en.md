@@ -1,267 +1,173 @@
-<p align="center">
-  <img src="noteforge/resources/icon.png" alt="Marble" width="128" height="128" onerror="this.style.display='none'">
-</p>
-
-<h1 align="center">Marble</h1>
-
-<p align="center">
-  <strong>HTML-Native Local Knowledge Management</strong>
-</p>
-
-<p align="center">
-  <a href="README.md">📖 中文</a>
-  &nbsp;·&nbsp;
-  <a href="#-overview">Overview</a>
-  &nbsp;·&nbsp;
-  <a href="#-features">Features</a>
-  &nbsp;·&nbsp;
-  <a href="#-quick-start">Quick Start</a>
-  &nbsp;·&nbsp;
-  <a href="#-tech-stack">Tech Stack</a>
-  &nbsp;·&nbsp;
-  <a href="#-project-structure">Structure</a>
-</p>
-
+<div align="center">
+<img src="noteforge/resources/icon.png" width="120" alt="Marble" />
+# Marble
+ 
+**HTML-native local knowledge management**
+ 
+Your notes are `.html` files, stored on your own computer.
+No cloud, no lock-in, no migration.
+ 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](https://github.com/vanemacus486-bit/Marble/releases)
+[![Stars](https://img.shields.io/github/stars/vanemacus486-bit/Marble?style=social)](https://github.com/vanemacus486-bit/Marble/stargazers)
+ 
+[**Download**](https://github.com/vanemacus486-bit/Marble/releases) · [中文](README.md) · [Report Issue](https://github.com/vanemacus486-bit/Marble/issues)
+ 
+</div>
 ---
-
-## 📖 Overview
-
-**Marble** is a **local-first, HTML-native** desktop knowledge management application. Your notes are standard `.html` files stored directly in a folder on your computer. No import, no migration, no proprietary format lock-in.
-
-> **No cloud. No lock-in. Your data, your files.**
-
-### Why HTML instead of Markdown?
-
-Markdown has limited expressiveness — tables, nested task lists, color annotations, subscripts/superscripts all require dialect support with poor cross-tool compatibility. HTML is the native language of the web, naturally supporting the full spectrum of rich text, and any browser can open it directly. Marble combines the convenience of WYSIWYG editing with the portability of plain HTML files.
-
-### Core Philosophy
-
-- **Local-first** — All data lives in a local folder (Vault); no data is ever uploaded to any server
-- **HTML-native** — Notes are `.html` files; metadata embedded as `<meta>` tags in `<head>` — standard and portable
-- **No lock-in** — Open your HTML files anytime with a browser or any other editor
-- **Privacy-first** — Fully offline, no accounts, no telemetry
-
+ 
+<!--
+👇 Put your main screenshot or GIF here (editor + knowledge graph + dark marble theme).
+Recommended size 1600×900, place at noteforge/resources/screenshot.png.
+A README without a screenshot above the fold loses ~3× star conversion.
+-->
+ 
+<div align="center">
+![Marble Screenshot](noteforge/resources/screenshot.png)
+ 
+</div>
 ---
-
+ 
+## Why not Markdown?
+ 
+Markdown was designed in 2004 with one purpose: **to be a convenient way to write HTML**. It was never the destination — HTML was.
+ 
+Twenty years later, we use Markdown for everything. The result: ugly tables, missing layouts, color via dialects, video via plugins, and cross-tool compatibility that doesn't actually exist. Every editor ships its own MD flavor — the "plain text" you wrote isn't really portable.
+ 
+**HTML is the native language of the web** — it natively supports the full spectrum of rich text, layout, media, and interaction. Any browser can open it. It worked 30 years ago, and it will work 30 years from now.
+ 
+Marble isn't here to replace Markdown. It's here for the people who've outgrown it: **write notes like writing HTML** — WYSIWYG, local-first, AI built in.
+ 
+> No cloud. No lock-in. Your data, your files.
+ 
+---
+ 
 ## ✨ Features
-
-### 🖊️ Rich Text Editing
-Powerful **TipTap** (ProseMirror) editor with:
-
-- Three edit modes: WYSIWYG, Source, Preview
-- Tables (resizable columns), nested task lists, code blocks (syntax highlighting)
-- Text color, font family, highlight, underline, subscript, superscript, alignment
-- Links, images, text styles
-- Multi-tab editing with drag-to-reorder
-- Split pane editing (horizontal / vertical)
-
-### 📂 File Management
-- Tree-based folder navigation with inline folder creation
-- Right-click context menu: New Note/Folder, Rename, Delete, Copy Path
-- Inline rename (Enter to confirm, Escape to cancel)
-- Note create, rename, delete
-- Automatic file watching (Chokidar) with real-time index updates
-
-### 🔍 Full-Text Search
-High-performance search powered by **FlexSearch**:
-
-- Field-level indexing (title, tags, content, path)
-- Search operators: `tag:design` `folder:notes/` `title:README` `file:index`
-- Debounced search (300ms), recent search history
-
-### 🕸️ Knowledge Graph
-Force-directed graph visualization with **D3-force**:
-
-- Notes as nodes (sized by backlink count, colored by folder)
-- Links as directed edges
-- Node dragging, zoom/pan, node pinning, global/local mode
-- Folder/tag filtering, fullscreen mode
-- Click node to open note
-
-### 🔗 Bi-directional Links
-- Automatic parsing of `[[wikilink]]`-style links between notes
-- Backlinks panel (who links to me)
-- Navigation history (back / forward)
-
-### 📤 Export
-- **Plain text**: Strip HTML tags
-- **Markdown**: Convert via Turndown for migration to other platforms
-- HTML is already the native format — view in any browser without exporting
-
-### 🎨 Theme System
-- Light / Dark / System-follow three modes
-- CSS custom properties driven, easy to extend
-
-### 🌐 Internationalization
-- Chinese (zh-CN) and English (en-US) interface switching
-- Full i18n powered by i18next
-- Language preference persisted across sessions
-
-### ⚙️ Enhanced Settings
-- Sidebar-navigated five-tab settings panel: About, Editor, Files & Links, Appearance, Shortcuts
-- Editor: Font family, size, line height, tab size, spellcheck, default edit mode
-- Files & Links: Auto-save interval, daily notes folder, file watcher, excluded folders
-- Appearance: Theme mode, language switcher, UI font size, custom CSS
-- Shortcuts: Searchable & filterable, recording mode for rebinding, conflict detection, reset to defaults
-
-### ⌨️ Keyboard Shortcuts
+ 
+### 📄 Notes are HTML files
+ 
+Every note is a standard `.html` file in a local folder (your Vault) of your choice. Metadata lives in `<meta>` tags in `<head>` — standard, portable, future-proof. Double-click to open in any browser. Edit in VS Code if you want. **No database, no proprietary format, no migration anxiety.**
+ 
+### 🤖 AI assistant that works on your notes
+ 
+A built-in AI panel that does more than chat: it reads your notes, searches your vault, creates or edits notes on request — and every write goes through a Diff preview before applying. Compatible with OpenAI, Anthropic, local Ollama, and anything else that speaks the OpenAI API. **Your API key, your bill, your privacy.**
+ 
+### 🕸️ Knowledge graph + bi-directional links
+ 
+D3-force directed graph with type-colored nodes and relationship-typed edges. `[[wikilink]]`-style links resolve automatically. Backlinks panel shows you who points where.
+ 
+### 🎨 Dark marble theme
+ 
+Designed in the modern `oklch()` color space. Cool gray surfaces with warm gold veining for focus accents. Geist UI + JetBrains Mono. Easy on the eyes for long writing sessions.
+ 
+### ⚡ Engineer-grade full-text search
+ 
+Field-level indexing via FlexSearch. Operators: `tag:design`, `folder:notes/`, `title:README`, `file:index`. 300ms debounce, recent searches, jump-on-hit.
+ 
+### 🔒 100% local, 0% telemetry
+ 
+No accounts. No cloud sync. No outbound requests (unless you configure AI yourself). Fully offline. **Your notes never leave your disk.**
+ 
+---
+ 
+## 📊 How it compares
+ 
+| | **Marble** | Obsidian | Notion | Typora |
+| --- | :---: | :---: | :---: | :---: |
+| Note file format | **`.html`** | `.md` | Proprietary | `.md` |
+| Local-first | ✅ | ✅ | ❌ | ✅ |
+| Works fully offline | ✅ | ✅ | ❌ | ✅ |
+| Rich-text expressiveness | **Full HTML** | MD + plugins | Strong | MD |
+| Bi-directional links | ✅ | ✅ | Weak | ❌ |
+| Knowledge graph | ✅ | ✅ | ❌ | ❌ |
+| Native AI (operates on notes) | ✅ | Plugin | ✅ | ❌ |
+| Open source | ✅ | ❌ | ❌ | ❌ |
+| Price | **Free** | Free / paid sync | Subscription | $14.99 |
+ 
+---
+ 
+## 🚀 Quick start
+ 
+### For users
+ 
+Grab a build from [Releases](https://github.com/vanemacus486-bit/Marble/releases):
+ 
+- **Windows**: `Marble-Setup-x.x.x.exe`
+- **macOS**: `Marble-x.x.x.dmg`
+- **Linux**: `Marble-x.x.x.AppImage`
+On first launch, pick a folder as your Vault — that's where all your notes live.
+ 
+### For developers
+ 
+```bash
+git clone https://github.com/vanemacus486-bit/Marble.git
+cd Marble/noteforge
+npm install
+npm run dev                       # Dev mode (HMR)
+npm run build                     # Production build
+npx electron-builder --win portable   # Build Windows portable exe
+```
+ 
+Prerequisites: Node.js ≥ 18, npm ≥ 9.
+ 
+---
+ 
+## ⌨️ Keyboard shortcuts
+ 
 | Shortcut | Action |
-|---|---|
-| `Ctrl+P` | Quick note switcher |
+| --- | --- |
+| `Ctrl+P` | Quick switch note |
 | `Ctrl+Shift+P` | Command palette |
 | `Ctrl+N` | New note |
-| `Ctrl+Shift+N` | New folder |
-| `Ctrl+\` | Toggle sidebar |
-| `Ctrl+Shift+\` | Toggle right panel |
-| `Ctrl+W` | Close current tab |
-| `Ctrl+S` | Save |
-| `Ctrl+E` | Cycle edit mode |
-| `Ctrl+F` | Find & replace |
+| `Ctrl+E` | Cycle edit mode (Source / WYSIWYG / Reading) |
 | `Ctrl+Shift+F` | Full-text search |
-| `Ctrl+,` | Settings |
-| `Ctrl+Tab` / `Shift+Ctrl+Tab` | Cycle tabs |
-| `F2` | Rename |
-| `Delete` | Delete |
+| `Ctrl+L` | Open AI panel |
 | `Ctrl+Shift+G` | Knowledge graph |
-
+| `Ctrl+,` | Settings |
+ 
+Full list under **Settings → Shortcuts**, all rebindable.
+ 
 ---
-
-## 🚀 Quick Start
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) >= 18
-- npm >= 9
-
-### Install & Run
-
-```bash
-# Clone the repository
-git clone https://github.com/vanemacus486-bit/marble.git
-cd marble
-
-# Install dependencies (auto-installs noteforge subdirectory)
-npm install
-
-# Run in development mode
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-### Development Commands
-
-```bash
-npm run dev          # Start Electron dev environment (HMR)
-npm run build        # Production build
-npm run preview      # Preview production build
-npm run typecheck    # TypeScript type checking
-npm test             # Run unit tests
-npm run test:watch   # Watch-mode tests
-npm run test:e2e     # Run E2E tests
-npm run lint         # Lint code
-```
-
+ 
+## 🛠️ Tech stack
+ 
+Electron 32 · React 18 · TypeScript 5.5 · Zustand 5 · TipTap (ProseMirror) · CodeMirror 6 · Tailwind CSS v4 · FlexSearch · D3-force · Chokidar · electron-builder
+ 
 ---
-
-## 🏗️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Desktop Framework** | Electron 32 |
-| **Build** | electron-vite 2.3 + Vite 5 |
-| **Renderer** | React 18 + TypeScript 5.5 |
-| **State Management** | Zustand 5 |
-| **Rich Text Editor** | TipTap 2.11 (ProseMirror), 30+ extensions |
-| **i18n** | i18next + react-i18next |
-| **Styling** | Tailwind CSS v4 (Vite plugin) |
-| **HTML Parsing** | htmlparser2 + domutils |
-| **Full-Text Search** | FlexSearch 0.7 |
-| **Graph Visualization** | D3 (d3-force, d3-selection, d3-zoom) |
-| **File Watching** | Chokidar 4 |
-| **Schema Validation** | Zod 3 |
-| **HTML→Markdown** | Turndown 7 |
-| **Testing** | Vitest + Playwright + Testing Library |
-| **Packaging** | electron-builder (Windows NSIS / macOS DMG / Linux AppImage) |
-| **Code Quality** | ESLint + Prettier + prettier-plugin-tailwindcss |
-
+ 
+## 🗺️ Roadmap
+ 
+- [x] HTML-native editor (Source / WYSIWYG / Reading)
+- [x] Bi-directional links + backlinks panel
+- [x] Knowledge graph (D3-force)
+- [x] Full-text search with operators
+- [x] AI assistant (read/write notes, Diff confirmation)
+- [x] Dark marble theme
+- [ ] Plugin system
+- [ ] Optional end-to-end encrypted sync
+- [ ] Templates
+- [ ] PDF / EPUB import
+- [ ] Mobile / Web
 ---
-
-## 📁 Project Structure
-
-```
-marble/
-├── noteforge/
-│   ├── src/
-│   │   ├── main/              # Electron main process
-│   │   │   ├── index.ts       # Entry: window creation, IPC registration
-│   │   │   └── services/      # Core services
-│   │   │       ├── vault-service.ts      # Vault file management
-│   │   │       ├── index-builder.ts      # FlexSearch index builder
-│   │   │       ├── note-parser.ts        # HTML note parser
-│   │   │       ├── search-engine.ts      # Search engine
-│   │   │       └── file-watcher.ts       # File change watcher
-│   │   ├── preload/           # Electron preload
-│   │   │   └── index.ts       # contextBridge API
-│   │   └── renderer/          # React renderer
-│   │       ├── index.html     # HTML entry point
-│   │       ├── main.tsx       # React entry point
-│   │       ├── App.tsx        # Root component
-│   │       ├── AppShell.tsx   # Main layout
-│   │       ├── components/    # UI components
-│   │       │   ├── editor/    # TipTap editor, source mode, preview
-│   │       │   ├── sidebar/   # File explorer, search panel
-│   │       │   ├── graph/     # Knowledge graph (D3 force)
-│   │       │   ├── navigation/ # Tab bar, breadcrumbs, panels
-│   │       │   └── ui/        # Shared UI (dialogs, toasts, etc.)
-│   │       ├── stores/        # Zustand stores
-│   │       ├── hooks/         # React hooks
-│   │       ├── styles/        # Global styles & themes
-│   │       ├── types/         # TypeScript type definitions
-│   │       └── utils/         # Utility functions
-│   ├── tests/                 # Tests
-│   ├── resources/             # App icons & assets
-│   ├── electron.vite.config.ts
-│   ├── electron-builder.yml
-│   ├── tsconfig.json
-│   └── vitest.config.ts
-├── package.json               # Workspace root config
-└── README.md                  # You're reading this file
-```
-
----
-
+ 
 ## 🤝 Contributing
-
-Contributions are welcome! The project is in early development (v0.1.0). If you're interested:
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Dev Environment
-
-VS Code is recommended with these extensions:
-- ESLint
-- Prettier
-- Tailwind CSS IntelliSense
-- TypeScript
-
-Code style is managed by ESLint + Prettier + prettier-plugin-tailwindcss. Run `npm run typecheck` before committing.
-
+ 
+The project is in early stages. All contributions welcome:
+ 
+- ⭐ Star the repo so more people find it
+- 🐛 [Report a bug](https://github.com/vanemacus486-bit/Marble/issues)
+- 💡 [Suggest a feature](https://github.com/vanemacus486-bit/Marble/issues)
+- 🔧 Open a Pull Request
 ---
-
+ 
 ## 📄 License
-
-MIT License
-
+ 
+[MIT](LICENSE) © Marble Contributors
+ 
 ---
-
-<p align="center">
-  <sub>Built with ❤️. Your data, forever yours.</sub>
-</p>
+ 
+<div align="center">
+**Your notes. Forever yours.**
+ 
+</div>
+ 
