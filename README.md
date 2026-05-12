@@ -1,178 +1,170 @@
-<p align="center">
-  <h1 align="center">◆ Marble</h1>
-</p>
-
-<p align="center">
-  <strong>HTML 原生的本地知识管理工具 · 暗色大理石主题</strong>
-</p>
-
-<p align="center">
-  <a href="#-概述">概述</a>
-  &nbsp;·&nbsp;
-  <a href="#-特性">特性</a>
-  &nbsp;·&nbsp;
-  <a href="#-快速开始">快速开始</a>
-  &nbsp;·&nbsp;
-  <a href="#-技术栈">技术栈</a>
-  &nbsp;·&nbsp;
-  <a href="#-项目结构">项目结构</a>
-</p>
-
+<div align="center">
+<img src="noteforge/resources/icon.png" width="120" alt="Marble" />
+# Marble
+ 
+**HTML 原生的本地知识管理工具**
+ 
+你的笔记是 `.html` 文件，存在你自己的电脑里。
+没有云，没有锁定，没有迁移。
+ 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](https://github.com/vanemacus486-bit/Marble/releases)
+[![Stars](https://img.shields.io/github/stars/vanemacus486-bit/Marble?style=social)](https://github.com/vanemacus486-bit/Marble/stargazers)
+ 
+[**下载**](https://github.com/vanemacus486-bit/Marble/releases) · [English](README.en.md) · [反馈问题](https://github.com/vanemacus486-bit/Marble/issues)
+ 
+</div>
 ---
-
-## 概述
-
-**Marble** 是一款**纯本地、HTML 原生**的桌面知识管理应用。你的笔记就是标准 `.html` 文件，直接存放在你电脑的文件夹中。无需导入，无需迁移，没有私有格式锁定。
-
-> **没有云。没有锁定。你的数据，你的文件。**
-
-### 核心理念
-
-- **本地优先** -- 所有数据存储在本地文件夹（Vault），不上传任何服务器
-- **HTML 原生** -- 笔记即 `.html` 文件，元数据以 `<meta>` 标签嵌入 `<head>`，标准且可移植
-- **不锁定数据** -- 随时用浏览器或其他编辑器打开你的 HTML 文件
-- **隐私至上** -- 完全离线，无账号系统，无遥测
-
+ 
+<!--
+👇 强烈建议在这里放一张主截图或 GIF（编辑器 + 知识图谱 + 暗色大理石主题）。
+建议尺寸 1600×900，放在 noteforge/resources/screenshot.png。
+README 顶部有没有截图,star 转化率差 3 倍以上。
+-->
+ 
+<div align="center">
+![Marble Screenshot](noteforge/resources/screenshot.png)
+ 
+</div>
 ---
-
-## 特性
-
-### 暗色大理石主题 (v0.4.0)
-基于 **oklch()** 色彩空间的暗色大理石设计系统：
-
-- 多层暗色表面 (`--m-bg` -> `--m-bg-inset`)，冷灰色调
-- 暖金色纹理强调 (`--m-vein`)，用于激活态指示器、链接、交互反馈
-- `.m-chip` 语义标签芯片、`.m-kbd` 键盘快捷键徽章、`.marble-vein-bg` 背景纹理
-- Geist UI 字体 + JetBrains Mono 等宽字体
-
-### Ribbon 垂直导航
-- **44px 图标条**：Files / Search / Graph / Components / Data / Tags，替代旧的文字标签页
-- **2px 金色左侧指示器**：激活项的脉纹标记
-- 悬停高亮，即时反馈
-
-### 编辑器
-三种模式，一键切换：
-
-- **源码模式**（默认）：CodeMirror 6，暗色大理石内嵌背景
-- **WYSIWYG 模式**（插件）：TipTap（ProseMirror），30+ 扩展
-- **阅读模式**：大理石排版，14.5px 正文，金色链接，青色内联代码
-- 30px 标签栏，激活态金色顶部边框，未保存标记
-
-### 文件管理
-- 树形目录浏览，Inline Rename
-- 右键上下文菜单：新建笔记/文件夹、重命名、删除、复制路径
-- 文件变动自动监听（Chokidar），实时更新索引
-
-### 全文搜索
-基于 **FlexSearch** 的高性能搜索引擎：
-
-- 字段级索引（标题、标签、正文、路径）
-- 搜索运算符：`tag:设计` `folder:notes/` `title:README` `file:index`
-- 防抖搜索（300ms），最近搜索记录
-
-### 知识图谱
-基于 **D3-force** 的力导向图可视化：
-
-- 节点按类型着色（data=金 / spec=蓝 / dash=品红 / runbook=红 / doc=紫 / comp=青）
-- 边按类型区分：数据流=金色实线，组件使用=青色虚线，链接=灰色细线
-- 选中节点发光滤镜 + 脉冲动画
-- 节点拖拽、缩放平移、全局/局部模式
-
-### 右侧信息面板
-- 三个可折叠分区：反向链接 / 大纲 / 属性
-- 反向链接卡片式展示，大理石卡片样式
-- 未链接提及自动发现
-
-### 双向链接
-- 自动解析笔记间的 `[[wikilink]]` 风格链接
-- 显示反向链接面板
-- 未链接提及自动发现
-
-### 导出
-- **独立 HTML 文件**：右键任意笔记导出自包含网页
-- **纯文本** + **Markdown**：通过 Turndown 转换
-- HTML 本身就是原生格式，无需导出即可在任何浏览器查看
-
-### 主题系统
-- 暗色大理石主题（默认）
-- CSS 自定义属性驱动，易于扩展
-
-### 多语言
-- 中文（zh-CN）和英语（en-US），基于 i18next
-
-### AI 助手 (v0.5.0)
-基于 OpenAI 兼容 API 的内置 AI 对话面板：
-
-- **Chat 界面**：侧边栏对话面板，支持流式输出
-- **Vault 感知**：AI 可直接读取、搜索、创建、编辑你的笔记
-- **工具调用**：list_files / read_note / search_notes / create_note / edit_note / delete_note / rename_note
-- **Diff 预览**：AI 编辑笔记时展示更改差异，需用户确认后应用
-- **安全模式**：写操作需用户批准，读操作自动执行
-- **多模型支持**：兼容 OpenAI / Anthropic / 本地模型（Ollama 等），在设置中配置
-
-### 增强设置
-- 六页签设置面板：关于、编辑器、文件与链接、外观、AI、快捷键
-- 可搜索筛选的快捷键重新绑定
-
-### 快捷键
+ 
+## 为什么不是 Markdown？
+ 
+Markdown 在 2004 年被设计出来时，**初衷就是为了方便地生成 HTML**。它从来不是终点，HTML 才是。
+ 
+20 年过去了，我们却用 Markdown 写一切——结果是：表格难看、布局缺失、想加点颜色要靠方言、想嵌入视频得装扩展，跨工具兼容性形同虚设。每个编辑器对 MD 都有自己的"私货"，所谓的纯文本最终并不可移植。
+ 
+**HTML 是 Web 的母语**——原生支持完整的富文本表达、布局、媒体、交互。任何浏览器都能打开，30 年前的能开，30 年后还能开。
+ 
+Marble 不是要替代 Markdown，而是给那些被 Markdown 局限住的人一个选择：**像写笔记一样写 HTML**，所见即所得，本地优先，AI 内置。
+ 
+> 没有云。没有锁定。你的数据，你的文件。
+ 
+---
+ 
+## ✨ 核心特性
+ 
+### 📄 笔记即 HTML 文件
+ 
+每条笔记都是一个标准 `.html` 文件，存在你指定的本地文件夹（Vault）里。元数据以 `<meta>` 标签嵌入 `<head>`——标准、可移植、永不过时。用浏览器双击就能打开，用 VS Code 也能改。**没有数据库，没有私有格式，没有迁移焦虑。**
+ 
+### 🤖 AI 助手能直接操作你的笔记
+ 
+内置 AI 对话面板，**不是简单的聊天**：它能读你的笔记、按需搜索 Vault、按要求创建或修改笔记，所有写操作 Diff 预览后由你确认。兼容 OpenAI / Anthropic / 本地 Ollama 等所有 OpenAI 协议的模型。**API Key 你自己的，账单你自己的，隐私你自己的。**
+ 
+### 🕸️ 知识图谱 + 双向链接
+ 
+基于 D3-force 的力导向图，节点按类型着色，边按关系区分。`[[wikilink]]` 风格的双向链接自动解析，反向链接面板帮你看清想法之间的关系。
+ 
+### 🎨 暗色大理石主题
+ 
+基于 `oklch()` 现代色彩空间设计的暗色主题。冷灰底色 + 暖金纹理强调，长时间编辑不刺眼。Geist UI 字体 + JetBrains Mono 等宽字体，每个像素都讲究。
+ 
+### ⚡ 工程师级的全文搜索
+ 
+基于 FlexSearch 的字段级索引，支持运算符：`tag:设计`、`folder:notes/`、`title:README`、`file:index`。300ms 防抖，最近搜索记录，命中即跳。
+ 
+### 🔒 100% 本地，0% 遥测
+ 
+没有账号系统。没有云同步。没有任何外发请求（除非你自己配 AI）。完全离线可用。**你的笔记从不离开你的硬盘。**
+ 
+---
+ 
+## 📊 和你熟悉的工具比
+ 
+| | **Marble** | Obsidian | Notion | Typora |
+| --- | :---: | :---: | :---: | :---: |
+| 笔记文件格式 | **`.html`** | `.md` | 私有数据库 | `.md` |
+| 本地优先 | ✅ | ✅ | ❌ | ✅ |
+| 完全离线可用 | ✅ | ✅ | ❌ | ✅ |
+| 富文本表达力 | **HTML 全集** | MD + 插件 | 强 | MD |
+| 双向链接 / 反向链接 | ✅ | ✅ | 弱 | ❌ |
+| 知识图谱 | ✅ | ✅ | ❌ | ❌ |
+| 原生 AI 助手（能操作笔记）| ✅ | 需插件 | ✅ | ❌ |
+| 开源 | ✅ | ❌ | ❌ | ❌ |
+| 价格 | **免费** | 免费 / 同步付费 | 订阅制 | $14.99 |
+ 
+---
+ 
+## 🚀 快速开始
+ 
+### 普通用户
+ 
+前往 [Releases](https://github.com/vanemacus486-bit/Marble/releases) 下载对应平台的安装包：
+ 
+- **Windows**：`Marble-Setup-x.x.x.exe`
+- **macOS**：`Marble-x.x.x.dmg`
+- **Linux**：`Marble-x.x.x.AppImage`
+首次启动时选择一个文件夹作为你的 Vault——它就是你所有笔记的"家"。
+ 
+### 开发者
+ 
+```bash
+git clone https://github.com/vanemacus486-bit/Marble.git
+cd Marble/noteforge
+npm install
+npm run dev                       # 开发模式
+npm run build                     # 构建生产版本
+npx electron-builder --win portable   # 打包 Windows exe
+```
+ 
+---
+ 
+## ⌨️ 常用快捷键
+ 
 | 快捷键 | 功能 |
-|---|---|
-| `Ctrl+P` | 快速切换 |
+| --- | --- |
+| `Ctrl+P` | 快速切换笔记 |
 | `Ctrl+Shift+P` | 命令面板 |
 | `Ctrl+N` | 新建笔记 |
-| `Ctrl+E` | 切换编辑模式 |
-| `Ctrl+F` | 查找替换 |
+| `Ctrl+E` | 切换编辑模式（源码 / 所见即所得 / 阅读）|
 | `Ctrl+Shift+F` | 全文搜索 |
-| `Ctrl+S` | 保存 |
-| `Ctrl+W` | 关闭标签 |
+| `Ctrl+L` | 打开 AI 对话面板 |
+| `Ctrl+Shift+G` | 打开知识图谱 |
 | `Ctrl+,` | 设置 |
-| `Ctrl+L` | AI 对话面板 |
-
+ 
+完整快捷键见**设置 → 快捷键**，全部支持自定义重绑。
+ 
 ---
-
-## 快速开始
-
-```bash
-git clone https://github.com/vanemacus486-bit/marble.git
-cd marble/noteforge
-npm install
-npm run dev       # 开发模式
-npm run build     # 构建生产版本
-npx electron-builder --win portable  # 打包 Windows exe
-```
-
-### 开发命令
-
-```bash
-npm run dev          # 启动 Electron 开发环境
-npm run build        # 构建生产版本
-npm run typecheck    # TypeScript 类型检查
-npm test             # 运行单元测试
-npm run lint         # 代码检查
-```
-
+ 
+## 🛠️ 技术栈
+ 
+Electron 32 · React 18 · TypeScript 5.5 · Zustand 5 · TipTap (ProseMirror) · CodeMirror 6 · Tailwind CSS v4 · FlexSearch · D3-force · Chokidar · electron-builder
+ 
 ---
-
-## 技术栈
-
-| 层 | 技术 |
-|---|---|
-| **桌面框架** | Electron 32 |
-| **构建工具** | electron-vite 2.3 + Vite 5 |
-| **渲染框架** | React 18 + TypeScript 5.5 |
-| **状态管理** | Zustand 5 |
-| **编辑器** | CodeMirror 6 + TipTap 2.11 / ProseMirror |
-| **AI 集成** | OpenAI SDK (兼容 Anthropic / Ollama 等) |
-| **国际化** | i18next + react-i18next |
-| **样式** | Tailwind CSS v4 + oklch() CSS 自定义属性 |
-| **全文搜索** | FlexSearch 0.7 |
-| **图谱可视化** | D3 (d3-force, d3-selection, d3-zoom) |
-| **文件监听** | Chokidar 4 |
-| **测试** | Vitest + Playwright |
-| **打包** | electron-builder |
-
+ 
+## 🗺️ Roadmap
+ 
+- [x] HTML 原生编辑器（源码 / 所见即所得 / 阅读 三模式）
+- [x] 双向链接 + 反向链接面板
+- [x] 知识图谱（D3-force）
+- [x] 全文搜索 + 运算符
+- [x] AI 助手（读写笔记、Diff 确认）
+- [x] 暗色大理石主题
+- [ ] 插件系统
+- [ ] 端到端加密的可选同步
+- [ ] 模板系统
+- [ ] PDF / EPUB 导入
+- [ ] 移动端 / Web 版
 ---
-
-## 许可证
-
-MIT License
+ 
+## 🤝 参与贡献
+ 
+项目处于早期阶段，欢迎任何形式的参与：
+ 
+- ⭐ Star 这个仓库，让更多人看到
+- 🐛 [报告 bug](https://github.com/vanemacus486-bit/Marble/issues)
+- 💡 [建议新功能](https://github.com/vanemacus486-bit/Marble/issues)
+- 🔧 提交 Pull Request
+---
+ 
+## 📄 License
+ 
+[MIT](LICENSE) © Marble Contributors
+ 
+---
+ 
+<div align="center">
+**你的笔记，永远是你的。**
+ 
+</div>
