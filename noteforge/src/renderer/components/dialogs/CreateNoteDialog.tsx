@@ -70,49 +70,126 @@ export default function CreateNoteDialog({ onClose, defaultFolder }: CreateNoteD
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.4)',
+      }}
       onKeyDown={handleKeyDown}
     >
       <div
-        className="w-full max-w-md rounded-lg bg-[var(--color-bg-primary)] p-6 shadow-2xl"
+        style={{
+          width: '100%',
+          maxWidth: 420,
+          borderRadius: 10,
+          background: 'var(--m-bg-1)',
+          border: '1px solid var(--m-line)',
+          padding: 24,
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+        }}
         role="dialog"
         aria-labelledby="create-note-title"
       >
-        <h2 id="create-note-title" className="text-lg font-semibold text-[var(--color-text-primary)]">
+        <h2
+          id="create-note-title"
+          style={{
+            fontSize: 15,
+            fontWeight: 600,
+            color: 'var(--m-fg)',
+            margin: 0,
+          }}
+        >
           Create Note
         </h2>
 
         {error && (
-          <div className="mt-3 rounded-md bg-red-50 p-2 text-sm text-[var(--color-danger)] dark:bg-red-900/20">
+          <div
+            style={{
+              marginTop: 12,
+              padding: '8px 12px',
+              borderRadius: 6,
+              background: 'oklch(0.32 0.05 25 / 0.18)',
+              color: 'var(--c-red)',
+              fontSize: 12,
+              border: '1px solid var(--m-line-soft)',
+            }}
+          >
             {error}
           </div>
         )}
 
         {/* Note name */}
-        <div className="mt-4">
-          <label className="text-xs font-medium text-[var(--color-text-muted)]">Note Name</label>
+        <div style={{ marginTop: 16 }}>
+          <label
+            style={{
+              fontSize: 10.5,
+              fontWeight: 500,
+              color: 'var(--m-fg-3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}
+          >
+            Note Name
+          </label>
           <input
             ref={inputRef}
-            className="mt-1 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none"
             placeholder="my-note"
             value={name}
             onChange={(e) => {
               setName(e.target.value)
               setError(null)
             }}
+            style={{
+              marginTop: 6,
+              width: '100%',
+              padding: '8px 12px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'var(--m-bg)',
+              color: 'var(--m-fg)',
+              fontSize: 13,
+              fontFamily: 'var(--f-mono)',
+              outline: 0,
+            }}
           />
         </div>
 
         {/* Folder selector */}
-        <div className="mt-3">
-          <label className="text-xs font-medium text-[var(--color-text-muted)]">
+        <div style={{ marginTop: 12 }}>
+          <label
+            style={{
+              fontSize: 10.5,
+              fontWeight: 500,
+              color: 'var(--m-fg-3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}
+          >
             Folder
-            {defaultFolder && <span className="ml-1">(default: {defaultFolder})</span>}
+            {defaultFolder && (
+              <span style={{ fontWeight: 400, marginLeft: 4 }}>
+                (default: {defaultFolder})
+              </span>
+            )}
           </label>
           <select
-            className="mt-1 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
             value={selectedFolder}
             onChange={(e) => setSelectedFolder(e.target.value)}
+            style={{
+              marginTop: 6,
+              width: '100%',
+              padding: '8px 12px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'var(--m-bg)',
+              color: 'var(--m-fg)',
+              fontSize: 12.5,
+              outline: 0,
+            }}
           >
             <option value="">Root</option>
             {folders.map((f) => (
@@ -124,12 +201,32 @@ export default function CreateNoteDialog({ onClose, defaultFolder }: CreateNoteD
         </div>
 
         {/* Template selector */}
-        <div className="mt-3">
-          <label className="text-xs font-medium text-[var(--color-text-muted)]">Template</label>
+        <div style={{ marginTop: 12 }}>
+          <label
+            style={{
+              fontSize: 10.5,
+              fontWeight: 500,
+              color: 'var(--m-fg-3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}
+          >
+            Template
+          </label>
           <select
-            className="mt-1 w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent)] focus:outline-none"
             value={selectedTemplate}
             onChange={(e) => setSelectedTemplate(e.target.value)}
+            style={{
+              marginTop: 6,
+              width: '100%',
+              padding: '8px 12px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'var(--m-bg)',
+              color: 'var(--m-fg)',
+              fontSize: 12.5,
+              outline: 0,
+            }}
           >
             <option value="none">No template</option>
             <option value="daily">Daily Note</option>
@@ -138,17 +235,35 @@ export default function CreateNoteDialog({ onClose, defaultFolder }: CreateNoteD
         </div>
 
         {/* Actions */}
-        <div className="mt-5 flex justify-end gap-2">
+        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
           <button
-            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-1.5 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-tertiary)]"
             onClick={onClose}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'transparent',
+              color: 'var(--m-fg-1)',
+              fontSize: 12.5,
+              cursor: 'pointer',
+            }}
           >
             Cancel
           </button>
           <button
-            className="rounded-md bg-[var(--color-accent)] px-4 py-1.5 text-sm text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
             onClick={handleCreate}
             disabled={isCreating || !name.trim()}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 6,
+              border: 0,
+              background: 'var(--m-vein)',
+              color: 'var(--m-bg)',
+              fontSize: 12.5,
+              fontWeight: 600,
+              cursor: 'pointer',
+              opacity: isCreating || !name.trim() ? 0.5 : 1,
+            }}
           >
             {isCreating ? 'Creating...' : 'Create'}
           </button>

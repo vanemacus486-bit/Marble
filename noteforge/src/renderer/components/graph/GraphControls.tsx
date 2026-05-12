@@ -28,108 +28,124 @@ export default function GraphControls() {
   }
 
   return (
-    <div className="graph-controls">
-      {/* Mode toggle */}
-      <div className="graph-controls-group">
-        <span className="graph-controls-label">Mode</span>
-        <button
-          className={`graph-controls-btn${mode === 'global' ? ' active' : ''}`}
-          onClick={() => setMode('global')}
-        >
-          Global
-        </button>
-        <button
-          className={`graph-controls-btn${mode === 'local' ? ' active' : ''}`}
-          onClick={() => setMode('local')}
-        >
-          Local
-        </button>
-      </div>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '0 16px',
+        height: 36,
+        background: 'var(--m-bg)',
+        borderBottom: '1px solid var(--m-line-soft)',
+      }}
+    >
+      <span style={{ fontSize: 12, color: 'var(--m-fg-1)', fontWeight: 500 }}>graph</span>
 
+      {/* Mode toggle */}
+      <span
+        className="m-chip mono"
+        style={{ cursor: 'pointer', color: mode === 'global' ? 'var(--m-vein)' : undefined }}
+        onClick={() => setMode('global')}
+      >
+        mode · global
+      </span>
+      <span
+        className="m-chip mono"
+        style={{ cursor: 'pointer', color: mode === 'local' ? 'var(--m-vein)' : undefined }}
+        onClick={() => setMode('local')}
+      >
+        mode · local
+      </span>
+
+      {/* Hops (local mode only) */}
       {mode === 'local' && (
         <>
-          <div className="graph-controls-divider" />
-          <div className="graph-controls-group">
-            <span className="graph-controls-label">Hops</span>
+          <div style={{ width: 1, height: 14, background: 'var(--m-line-soft)' }} />
+          <span className="m-chip mono" style={{ gap: 6 }}>
+            depth ·
             <select
-              className="graph-controls-select"
               value={hopCount}
               onChange={(e) => setHopCount(Number(e.target.value))}
+              style={{
+                background: 'none',
+                border: 0,
+                outline: 0,
+                color: 'var(--m-fg-1)',
+                fontFamily: 'var(--f-mono)',
+                fontSize: 10.5,
+                cursor: 'pointer',
+                padding: 0,
+              }}
             >
               <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>
             </select>
-          </div>
+          </span>
         </>
       )}
 
-      <div className="graph-controls-divider" />
-
       {/* Physics toggle */}
-      <div className="graph-controls-group">
-        <button
-          className={`graph-controls-btn${physicsEnabled ? ' active' : ''}`}
-          onClick={() => setPhysics(!physicsEnabled)}
-          title="Toggle physics simulation"
-        >
-          {physicsEnabled ? 'Physics On' : 'Physics Off'}
-        </button>
-      </div>
+      <div style={{ width: 1, height: 14, background: 'var(--m-line-soft)' }} />
+      <span
+        className="m-chip mono"
+        style={{ cursor: 'pointer', color: physicsEnabled ? 'var(--m-vein)' : undefined }}
+        onClick={() => setPhysics(!physicsEnabled)}
+      >
+        physics · {physicsEnabled ? 'on' : 'off'}
+      </span>
 
       {/* Folder filter */}
       {folders.length > 0 && (
         <>
-          <div className="graph-controls-divider" />
-          <div className="graph-controls-group">
-            <span className="graph-controls-label">Folder</span>
+          <div style={{ width: 1, height: 14, background: 'var(--m-line-soft)' }} />
+          <span className="m-chip mono" style={{ gap: 6 }}>
+            filter ·
             <select
-              className="graph-controls-select"
               value={filterFolder ?? ''}
               onChange={(e) => setFilterFolder(e.target.value || null)}
+              style={{
+                background: 'none',
+                border: 0,
+                outline: 0,
+                color: 'var(--m-fg-1)',
+                fontFamily: 'var(--f-mono)',
+                fontSize: 10.5,
+                cursor: 'pointer',
+                padding: 0,
+                maxWidth: 100,
+              }}
             >
-              <option value="">All</option>
+              <option value="">all</option>
               {folders.map((f) => (
                 <option key={f} value={f}>
                   {f}
                 </option>
               ))}
             </select>
-          </div>
+          </span>
         </>
       )}
 
-      <div className="graph-controls-divider" />
+      <div style={{ flex: 1 }} />
 
-      {/* Reset and fullscreen */}
-      <div className="graph-controls-group">
-        <button
-          className="graph-controls-btn"
-          onClick={() => resetZoom()}
-          title="Reset zoom"
-        >
-          Reset
-        </button>
-        <button
-          className="graph-controls-btn"
-          onClick={toggleFullscreen}
-          title="Toggle fullscreen"
-        >
-          {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-        </button>
-        <button
-          className="graph-controls-btn"
-          onClick={handleClose}
-          title="Close graph"
-        >
-          Close
-        </button>
-      </div>
+      {/* Actions */}
+      <span className="m-chip mono" style={{ cursor: 'pointer' }} onClick={() => resetZoom()}>
+        reset
+      </span>
+      <span className="m-chip mono" style={{ cursor: 'pointer' }} onClick={toggleFullscreen}>
+        {isFullscreen ? 'exit' : 'expand'}
+      </span>
+      <span className="m-chip mono" style={{ cursor: 'pointer' }} onClick={handleClose}>
+        close
+      </span>
 
       {/* Node count */}
-      <span className="graph-controls-count">
-        {activeTab ? `${nodes.length} nodes` : ''}
-      </span>
+      {activeTab && (
+        <span style={{ fontSize: 10.5, color: 'var(--m-fg-3)', fontFamily: 'var(--f-mono)' }}>
+          {nodes.length} nodes
+        </span>
+      )}
     </div>
   )
 }

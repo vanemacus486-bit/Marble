@@ -23,11 +23,9 @@ export default function ExportDialog({ onClose, html }: ExportDialogProps) {
         const plaintext = await window.electronAPI.exportPlaintext(html)
         await copyToClipboard(plaintext)
       } else if (format === 'markdown') {
-        // Convert HTML to Markdown via Turndown, then copy
         const content = await convertHtmlToMarkdown(html)
         await copyToClipboard(content)
       } else if (format === 'html') {
-        // Save HTML as file via save dialog
         await window.electronAPI.exportHtmlFile(html, '')
       }
       setCopied(true)
@@ -52,72 +50,157 @@ export default function ExportDialog({ onClose, html }: ExportDialogProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.4)',
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') onClose()
       }}
     >
       <div
-        className="w-full max-w-sm rounded-lg bg-[var(--color-bg-primary)] p-6 shadow-2xl"
+        style={{
+          width: '100%',
+          maxWidth: 380,
+          borderRadius: 10,
+          background: 'var(--m-bg-1)',
+          border: '1px solid var(--m-line)',
+          padding: 24,
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+        }}
         role="dialog"
         aria-labelledby="export-title"
       >
-        <h2 id="export-title" className="text-lg font-semibold text-[var(--color-text-primary)]">
+        <h2
+          id="export-title"
+          style={{
+            fontSize: 15,
+            fontWeight: 600,
+            color: 'var(--m-fg)',
+            margin: 0,
+          }}
+        >
           Export Note
         </h2>
 
         {error && (
-          <div className="mt-3 rounded-md bg-red-50 p-2 text-sm text-[var(--color-danger)] dark:bg-red-900/20">
+          <div
+            style={{
+              marginTop: 12,
+              padding: '8px 12px',
+              borderRadius: 6,
+              background: 'oklch(0.32 0.05 25 / 0.18)',
+              color: 'var(--c-red)',
+              fontSize: 12,
+              border: '1px solid var(--m-line-soft)',
+            }}
+          >
             {error}
           </div>
         )}
 
         {/* Format selector */}
-        <div className="mt-4">
-          <label className="text-xs font-medium text-[var(--color-text-muted)]">Format</label>
-          <div className="mt-1 flex gap-2">
+        <div style={{ marginTop: 16 }}>
+          <label
+            style={{
+              fontSize: 10.5,
+              fontWeight: 500,
+              color: 'var(--m-fg-3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+            }}
+          >
+            Format
+          </label>
+          <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
             {(
               [
                 { id: 'plaintext', label: 'Plain Text' },
                 { id: 'markdown', label: 'Markdown' },
                 { id: 'html', label: 'HTML Page' },
               ] as { id: ExportFormat; label: string }[]
-            ).map((opt) => (
-              <button
-                key={opt.id}
-                className={`flex-1 rounded-md border px-3 py-2 text-sm transition-colors ${
-                  format === opt.id
-                    ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white'
-                    : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-                }`}
-                onClick={() => setFormat(opt.id)}
-              >
-                {opt.label}
-              </button>
-            ))}
+            ).map((opt) => {
+              const isActive = format === opt.id
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => setFormat(opt.id)}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    borderRadius: 6,
+                    border: isActive ? '1px solid var(--m-vein-dim)' : '1px solid var(--m-line)',
+                    background: isActive ? 'var(--m-vein-bg)' : 'var(--m-bg)',
+                    color: isActive ? 'var(--m-vein)' : 'var(--m-fg-1)',
+                    fontSize: 12,
+                    fontWeight: isActive ? 600 : 400,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="mt-5 flex justify-end gap-2">
+        <div style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
           <button
-            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-1.5 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-tertiary)]"
             onClick={onClose}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'transparent',
+              color: 'var(--m-fg-1)',
+              fontSize: 12.5,
+              cursor: 'pointer',
+            }}
           >
             Cancel
           </button>
           <button
-            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-1.5 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-tertiary)]"
             onClick={handleCopySnippet}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 6,
+              border: '1px solid var(--m-line)',
+              background: 'var(--m-bg)',
+              color: 'var(--m-fg-1)',
+              fontSize: 12.5,
+              cursor: 'pointer',
+            }}
           >
             {copied ? 'Copied!' : 'Copy Raw'}
           </button>
           <button
-            className="rounded-md bg-[var(--color-accent)] px-4 py-1.5 text-sm text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
             onClick={handleExport}
             disabled={isExporting}
+            style={{
+              padding: '6px 16px',
+              borderRadius: 6,
+              border: 0,
+              background: 'var(--m-vein)',
+              color: 'var(--m-bg)',
+              fontSize: 12.5,
+              fontWeight: 600,
+              cursor: 'pointer',
+              opacity: isExporting ? 0.5 : 1,
+            }}
           >
-            {isExporting ? 'Exporting...' : copied ? 'Copied!' : format === 'html' ? 'Export HTML File' : `Export & Copy`}
+            {isExporting
+              ? 'Exporting...'
+              : copied
+                ? 'Copied!'
+                : format === 'html'
+                  ? 'Export HTML File'
+                  : 'Export & Copy'}
           </button>
         </div>
       </div>
@@ -135,7 +218,6 @@ async function convertHtmlToMarkdown(html: string): Promise<string> {
     })
     return turndown.turndown(html)
   } catch {
-    // Fallback if turndown is unavailable
     return stripHtml(html)
   }
 }

@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useEditorStore } from '../../stores/editor-store'
 import { useVaultStore } from '../../stores/vault-store'
-import { getEffectiveShortcut, formatShortcutKeys } from '../../config/shortcuts'
 
 export default function StatusBar() {
   const { t } = useTranslation()
@@ -9,7 +8,6 @@ export default function StatusBar() {
   const toggleEditMode = useEditorStore((s) => s.toggleEditMode)
   const enableWysiwyg = useVaultStore((s) => s.config?.editor?.enableWysiwyg) ?? false
   const vaultPath = useVaultStore((s) => s.vaultPath)
-  const vaultName = useVaultStore((s) => s.vaultName)
 
   const wordCount = activeTab?.content
     ? activeTab.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length
@@ -28,9 +26,6 @@ export default function StatusBar() {
       })()
     : ''
 
-  const editModeShortcut = getEffectiveShortcut('toggle-edit-mode')
-  const editModeHint = editModeShortcut ? ` (${formatShortcutKeys(editModeShortcut)})` : ''
-
   const handleCycleEditMode = () => {
     if (activeTab) {
       toggleEditMode(activeTab.id, enableWysiwyg)
@@ -38,29 +33,47 @@ export default function StatusBar() {
   }
 
   return (
-    <div className="flex items-center justify-between border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-3 py-0.5 text-xs text-[var(--color-text-muted)]">
-      <div className="flex items-center gap-4">
-        <span>{vaultName ?? t('statusbar.noVault')}</span>
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      height: 22, padding: '0 10px',
+      background: 'var(--m-bg-inset)',
+      borderTop: '1px solid var(--m-line-soft)',
+      fontFamily: 'var(--f-mono)', fontSize: '10.5px',
+      color: 'var(--m-fg-3)',
+      flex: '0 0 auto',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <span style={{ color: 'var(--c-green)' }}>●</span>
+        <span>html valid</span>
         {activeTab && (
           <>
             <span>{t('statusbar.words', { count: wordCount })}</span>
             {readingTime && <span>{readingTime}</span>}
             <button
-              className="cursor-pointer rounded px-1 hover:bg-[var(--color-bg-tertiary)]"
+              style={{
+                cursor: 'pointer', borderRadius: 3, padding: '0 4px',
+                color: 'var(--m-fg-3)', fontFamily: 'var(--f-mono)', fontSize: '10.5px',
+              }}
               onClick={handleCycleEditMode}
-              title={`${t('commandPalette.toggleEditMode')}${editModeHint}`}
             >
               {activeTab.editMode === 'source' ? 'Source' : activeTab.editMode === 'wysiwyg' ? 'Edit' : 'Read'}
             </button>
             {activeTab.isDirty && (
-              <span className="rounded-full bg-[var(--color-warning)] px-2 py-0.5 text-xs text-white">{t('statusbar.unsaved')}</span>
+              <span style={{
+                borderRadius: 9, padding: '0 8px',
+                background: 'var(--m-vein)', color: '#000',
+                fontSize: 10,
+              }}>
+                {t('statusbar.unsaved')}
+              </span>
             )}
           </>
         )}
       </div>
-      <div className="flex items-center gap-4">
-        {activeTab && <span>{activeTab.notePath}</span>}
-        <span>{vaultPath ?? ''}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {activeTab && <span style={{ color: 'var(--m-fg-3)' }}>{activeTab.notePath}</span>}
+        <span style={{ color: 'var(--m-fg-3)' }}>{vaultPath ?? ''}</span>
+        <span style={{ color: 'var(--m-vein)' }}>marble 0.4.0</span>
       </div>
     </div>
   )

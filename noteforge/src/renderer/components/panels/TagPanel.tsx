@@ -1,96 +1,66 @@
 import { useMemo, useState } from 'react'
 import { useVaultStore } from '../../stores/vault-store'
 import { useSearchStore } from '../../stores/search-store'
+import SideHead from '../layout/SideHead'
 
-interface TagEntry {
-  name: string
-  count: number
-  children: TagEntry[]
-}
+interface TagEntry { name: string; count: number; children: TagEntry[] }
 
 function buildTagTree(tagCounts: Map<string, number>): TagEntry[] {
   const tree: TagEntry[] = []
   const tagMap = new Map<string, TagEntry>()
-
   const sorted = [...tagCounts.entries()].sort((a, b) => b[1] - a[1])
-
   for (const [name, count] of sorted) {
     const parts = name.split('/')
     let currentLevel = tree
     let accumulated = ''
-
     for (const part of parts) {
       accumulated = accumulated ? `${accumulated}/${part}` : part
       if (!tagMap.has(accumulated)) {
         const entry: TagEntry = { name: part, count: 0, children: [] }
-        tagMap.set(accumulated, entry)
-        currentLevel.push(entry)
+        tagMap.set(accumulated, entry); currentLevel.push(entry)
       }
-      const entry = tagMap.get(accumulated)!
-      entry.count += count
+      const entry = tagMap.get(accumulated)!; entry.count += count
       currentLevel = entry.children
     }
   }
-
   return tree
 }
 
-interface TagRowProps {
-  entry: TagEntry
-  depth: number
-  onTagClick: (tag: string) => void
-}
+interface TagRowProps { entry: TagEntry; depth: number; onTagClick: (tag: string) => void }
 
 function TagRow({ entry, depth, onTagClick }: TagRowProps) {
   const [expanded, setExpanded] = useState(depth < 1)
   const hasChildren = entry.children.length > 0
 
-  const fullTag = useMemo(() => {
-    // Reconstruct full tag path by traversing up
-    return entry.name
-  }, [entry.name])
-
   return (
     <div>
-      <div
-        className="flex cursor-pointer items-center gap-1 px-3 py-1 text-sm transition-colors hover:bg-[var(--color-bg-tertiary)]"
-        style={{ paddingLeft: `${12 + depth * 16}px` }}
-      >
-        {hasChildren && (
-          <button
-            className="flex-shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-            onClick={(e) => {
-              e.stopPropagation()
-              setExpanded(!expanded)
-            }}
-          >
-            <svg
-              className={`h-3 w-3 transition-transform ${expanded ? 'rotate-90' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer',
+        padding: '2px 10px', paddingLeft: 12 + depth * 16,
+        height: 22, borderRadius: 4, fontSize: '12.5px',
+        color: 'var(--m-fg-1)',
+      }}
+      onMouseOver={e => { e.currentTarget.style.background = 'oklch(0.20 0.006 260)' }}
+      onMouseOut={e => { e.currentTarget.style.background = 'transparent' }}>
+        {hasChildren ? (
+          <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded) }}
+            style={{ color: 'var(--m-fg-3)', display: 'flex' }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              style={{ transform: expanded ? 'rotate(90deg)' : '', transition: 'transform .12s' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
-        )}
-        {!hasChildren && <div className="w-3 flex-shrink-0" />}
+        ) : <div style={{ width: 12, flex: '0 0 12px' }} />}
         <button
-          className="flex-1 truncate text-left text-[var(--color-text-secondary)] hover:text-[var(--color-accent)]"
-          onClick={() => onTagClick(fullTag)}
-        >
-          <span className="text-[var(--color-accent)]">#</span>
-          {entry.name}
+          style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--m-fg-1)', fontSize: '12.5px' }}
+          onClick={() => onTagClick(entry.name)}>
+          <span style={{ color: 'var(--m-vein)' }}>#</span>{entry.name}
         </button>
-        <span className="flex-shrink-0 text-xs text-[var(--color-text-muted)]">{entry.count}</span>
+        <span style={{ fontSize: 10, color: 'var(--m-fg-3)', fontFamily: 'var(--f-mono)' }}>{entry.count}</span>
       </div>
-      {hasChildren && expanded && (
-        <div>
-          {entry.children.map((child) => (
-            <TagRow key={child.name} entry={child} depth={depth + 1} onTagClick={onTagClick} />
-          ))}
-        </div>
-      )}
+      {hasChildren && expanded && entry.children.map((child) => (
+        <TagRow key={child.name} entry={child} depth={depth + 1} onTagClick={onTagClick} />
+      ))}
     </div>
   )
 }
@@ -103,36 +73,25 @@ export default function TagPanel() {
   const tagTree = useMemo(() => {
     const tagCounts = new Map<string, number>()
     for (const note of notes.values()) {
-      for (const tag of note.tags) {
-        tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
-      }
+      for (const tag of note.tags) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
     }
     return buildTagTree(tagCounts)
   }, [notes])
 
-  const handleTagClick = (tag: string) => {
-    setOpen(true)
-    setQuery(`tag:${tag}`)
-  }
+  const handleTagClick = (tag: string) => { setOpen(true); setQuery(`tag:${tag}`) }
 
   if (tagTree.length === 0) {
     return (
-      <div className="p-3 text-center text-sm text-[var(--color-text-muted)]">
-        No tags
-      </div>
+      <div style={{ padding: 12, textAlign: 'center', fontSize: 13, color: 'var(--m-fg-3)' }}>No tags</div>
     )
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="border-b border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)]">
-        Tags
-      </div>
-      <div className="py-1">
-        {tagTree.map((entry) => (
-          <TagRow key={entry.name} entry={entry} depth={0} onTagClick={handleTagClick} />
-        ))}
-      </div>
+    <div>
+      <SideHead>Tags</SideHead>
+      {tagTree.map((entry) => (
+        <TagRow key={entry.name} entry={entry} depth={0} onTagClick={handleTagClick} />
+      ))}
     </div>
   )
 }

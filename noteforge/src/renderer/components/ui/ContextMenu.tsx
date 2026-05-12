@@ -112,7 +112,6 @@ function ContextMenuPortal({
         onClose()
       }
     }
-    // Delay so the right-click event itself doesn't trigger close
     const timer = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside)
     }, 0)
@@ -137,7 +136,7 @@ function ContextMenuPortal({
     return () => document.removeEventListener('keydown', handleKey)
   }, [onClose, activeSubmenu])
 
-  // Smart positioning – flip when near viewport edges
+  // Smart positioning
   useEffect(() => {
     const el = menuRef.current
     if (!el) return
@@ -155,7 +154,7 @@ function ContextMenuPortal({
     setAdjustedPos({ x, y })
   }, [position])
 
-  // Keyboard navigation (arrow keys, Enter)
+  // Keyboard navigation
   const [focusedIndex, setFocusedIndex] = useState(0)
   const visibleIndices = items
     .map((item, i) => (isSeparator(item) ? -1 : i))
@@ -195,17 +194,30 @@ function ContextMenuPortal({
   return createPortal(
     <div
       ref={menuRef}
-      className="fixed z-[100] min-w-[180px] rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] py-1 shadow-lg"
-      style={{ left: adjustedPos.x, top: adjustedPos.y }}
       role="menu"
+      style={{
+        position: 'fixed',
+        zIndex: 100,
+        minWidth: 180,
+        borderRadius: 6,
+        border: '1px solid var(--m-line)',
+        background: 'var(--m-bg-1)',
+        padding: '4px 0',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+        left: adjustedPos.x,
+        top: adjustedPos.y,
+      }}
     >
       {items.map((item, index) => {
         if (isSeparator(item)) {
           return (
             <div
               key={`sep-${index}`}
-              className="my-1 border-t border-[var(--color-border)]"
               role="separator"
+              style={{
+                margin: '3px 0',
+                borderTop: '1px solid var(--m-line-soft)',
+              }}
             />
           )
         }
@@ -250,19 +262,8 @@ function ContextMenuItemRow({
   const isSubmenuOpen = activeSubmenu === item.id
 
   return (
-    <div className="relative">
+    <div style={{ position: 'relative' }}>
       <button
-        className={`flex w-full items-center gap-3 px-3 py-1.5 text-left text-sm transition-colors ${
-          item.danger
-            ? 'text-[var(--color-danger)]'
-            : 'text-[var(--color-text-primary)]'
-        } ${
-          item.disabled
-            ? 'cursor-default opacity-50'
-            : isFocused
-              ? 'bg-[var(--color-bg-tertiary)]'
-              : 'hover:bg-[var(--color-bg-tertiary)]'
-        }`}
         disabled={item.disabled}
         role="menuitem"
         onClick={() => {
@@ -280,47 +281,71 @@ function ContextMenuItemRow({
             setActiveSubmenu(item.id)
           }
         }}
+        style={{
+          display: 'flex',
+          width: '100%',
+          alignItems: 'center',
+          gap: 8,
+          padding: '5px 12px',
+          fontSize: 12.5,
+          textAlign: 'left',
+          border: 0,
+          cursor: item.disabled ? 'default' : 'pointer',
+          opacity: item.disabled ? 0.4 : 1,
+          color: item.danger ? 'var(--c-red)' : 'var(--m-fg)',
+          background: isFocused && !item.disabled ? 'var(--m-bg-2)' : 'transparent',
+        }}
       >
-        <span className="flex h-4 w-4 items-center justify-center">{item.icon}</span>
-
-        <span className="flex-1 truncate">{item.label}</span>
-
+        <span style={{ display: 'flex', width: 16, height: 16, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          {item.icon}
+        </span>
+        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {item.label}
+        </span>
         {item.shortcut && (
-          <span className="ml-4 text-xs text-[var(--color-text-muted)]">{item.shortcut}</span>
+          <span className="m-kbd" style={{ marginLeft: 8 }}>
+            {item.shortcut}
+          </span>
         )}
-
-        {hasSubmenu && <ChevronRight className="ml-1 h-3 w-3 text-[var(--color-text-muted)]" />}
+        {hasSubmenu && (
+          <ChevronRight style={{ width: 12, height: 12, color: 'var(--m-fg-3)', flexShrink: 0 }} />
+        )}
       </button>
 
       {/* Submenu */}
       {hasSubmenu && isSubmenuOpen && (
         <div
-          className="absolute left-full top-0 z-[101] min-w-[160px] rounded-md border border-[var(--color-border)] bg-[var(--color-bg-primary)] py-1 shadow-lg"
-          style={{ marginLeft: 2 }}
           role="menu"
+          style={{
+            position: 'absolute',
+            left: '100%',
+            top: 0,
+            zIndex: 101,
+            minWidth: 160,
+            borderRadius: 6,
+            border: '1px solid var(--m-line)',
+            background: 'var(--m-bg-1)',
+            padding: '4px 0',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+            marginLeft: 2,
+          }}
         >
           {item.children!.map((child, ci) => {
             if (isSeparator(child)) {
               return (
                 <div
                   key={`sub-sep-${ci}`}
-                  className="my-1 border-t border-[var(--color-border)]"
                   role="separator"
+                  style={{
+                    margin: '3px 0',
+                    borderTop: '1px solid var(--m-line-soft)',
+                  }}
                 />
               )
             }
             return (
               <button
                 key={child.id}
-                className={`flex w-full items-center gap-3 px-3 py-1.5 text-left text-sm transition-colors ${
-                  child.danger
-                    ? 'text-[var(--color-danger)]'
-                    : 'text-[var(--color-text-primary)]'
-                } ${
-                  child.disabled
-                    ? 'cursor-default opacity-50'
-                    : 'hover:bg-[var(--color-bg-tertiary)]'
-                }`}
                 disabled={child.disabled}
                 role="menuitem"
                 onClick={() => {
@@ -328,11 +353,31 @@ function ContextMenuItemRow({
                   child.onClick()
                   onClose()
                 }}
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '5px 12px',
+                  fontSize: 12.5,
+                  textAlign: 'left',
+                  border: 0,
+                  cursor: child.disabled ? 'default' : 'pointer',
+                  opacity: child.disabled ? 0.4 : 1,
+                  color: child.danger ? 'var(--c-red)' : 'var(--m-fg)',
+                  background: 'transparent',
+                }}
               >
-                <span className="flex h-4 w-4 items-center justify-center">{child.icon}</span>
-                <span className="flex-1 truncate">{child.label}</span>
+                <span style={{ display: 'flex', width: 16, height: 16, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {child.icon}
+                </span>
+                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {child.label}
+                </span>
                 {child.shortcut && (
-                  <span className="ml-4 text-xs text-[var(--color-text-muted)]">{child.shortcut}</span>
+                  <span className="m-kbd" style={{ marginLeft: 8 }}>
+                    {child.shortcut}
+                  </span>
                 )}
               </button>
             )

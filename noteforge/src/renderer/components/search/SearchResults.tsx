@@ -10,56 +10,34 @@ export default function SearchResults() {
   const selectedIndex = useSearchStore((s) => s.selectedIndex)
   const setOpen = useSearchStore((s) => s.setOpen)
   const openNote = useEditorStore((s) => s.openNote)
-
   const selectedRef = useRef<HTMLButtonElement>(null)
 
-  // Scroll selected item into view
-  useEffect(() => {
-    if (selectedRef.current) {
-      selectedRef.current.scrollIntoView({ block: 'nearest' })
-    }
-  }, [selectedIndex])
+  useEffect(() => { selectedRef.current?.scrollIntoView({ block: 'nearest' }) }, [selectedIndex])
 
-  const handleClick = (noteId: string) => {
-    openNote(noteId)
-    setOpen(false)
-  }
+  const handleClick = (noteId: string) => { openNote(noteId); setOpen(false) }
 
-  // Loading state
   if (isSearching) {
-    return (
-      <div className="px-3 py-4 text-center text-sm text-[var(--color-text-muted)]">
-        Searching...
-      </div>
-    )
+    return <div style={{ padding: '12px', textAlign: 'center', fontSize: 13, color: 'var(--m-fg-3)' }}>Searching...</div>
   }
 
-  // No results after search
   if (results.length === 0) {
-    return (
-      <div className="px-3 py-6 text-center text-sm text-[var(--color-text-muted)]">
-        No results found
-      </div>
-    )
+    return <div style={{ padding: '24px 12px', textAlign: 'center', fontSize: 13, color: 'var(--m-fg-3)' }}>No results found</div>
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="border-b border-[var(--color-border)] px-3 py-1.5 text-xs text-[var(--color-text-muted)]">
-        Showing {results.length}
-        {results.length < total ? ` of ${total}` : ''} results
+    <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{
+        padding: '6px 10px', fontSize: '10.5px', fontWeight: 600,
+        textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--m-fg-3)',
+        borderBottom: '1px solid var(--m-line-soft)',
+      }}>
+        Showing {results.length}{results.length < total ? ` of ${total}` : ''} results
       </div>
-      <div className="max-h-[50vh] overflow-y-auto">
-        {results.map((result, i) => (
-          <div key={result.noteId} ref={i === selectedIndex ? selectedRef : undefined}>
-            <SearchResultItem
-              result={result}
-              isSelected={i === selectedIndex}
-              onClick={() => handleClick(result.noteId)}
-            />
-          </div>
-        ))}
-      </div>
+      {results.map((result, i) => (
+        <div key={result.noteId} ref={i === selectedIndex ? selectedRef : undefined}>
+          <SearchResultItem result={result} isSelected={i === selectedIndex} onClick={() => handleClick(result.noteId)} />
+        </div>
+      ))}
     </div>
   )
 }

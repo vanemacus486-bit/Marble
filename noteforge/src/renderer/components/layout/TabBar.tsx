@@ -1,9 +1,7 @@
 import { useEditorStore } from '../../stores/editor-store'
-import { useVaultStore } from '../../stores/vault-store'
 import { useUiStore } from '../../stores/ui-store'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { X, Plus } from 'lucide-react'
-import { getEffectiveShortcut, formatShortcutKeys } from '../../config/shortcuts'
 
 export default function TabBar() {
   const tabs = useEditorStore((s) => s.tabs)
@@ -20,7 +18,6 @@ export default function TabBar() {
   const [contextMenu, setContextMenu] = useState<{ tabId: string; x: number; y: number } | null>(null)
   const contextMenuRef = useRef<HTMLDivElement>(null)
 
-  // Close context menu on outside click
   useEffect(() => {
     if (!contextMenu) return
     const handleClick = (e: MouseEvent) => {
@@ -72,113 +69,151 @@ export default function TabBar() {
     setPendingCloseTabId(null)
   }
 
-  const handleCreateNote = () => {
-    const vaultStore = useVaultStore.getState()
-    vaultStore.refreshFiles()
-  }
-
-  const newNoteShortcut = getEffectiveShortcut('new-note')
-  const newNoteHint = newNoteShortcut ? ` (${formatShortcutKeys(newNoteShortcut)})` : ''
-
   return (
     <>
-      <div className="flex border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-        <div className="flex flex-1 overflow-x-auto">
+      <div style={{
+        display: 'flex',
+        height: 30,
+        background: 'var(--m-bg)',
+        borderBottom: '1px solid var(--m-line-soft)',
+      }}>
+        <div style={{ display: 'flex', flex: 1, overflowX: 'auto' }}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`group relative flex items-center gap-1.5 border-r border-[var(--color-border)] px-3 py-1.5 text-sm transition-colors ${
-                tab.id === activeTabId
-                  ? 'bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]'
-                  : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)]'
-              }`}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                height: 30, padding: '0 10px', minWidth: 0, maxWidth: 220,
+                fontSize: 12, cursor: 'pointer',
+                background: tab.id === activeTabId ? 'var(--m-bg-1)' : 'transparent',
+                color: tab.id === activeTabId ? 'var(--m-fg)' : 'var(--m-fg-2)',
+                borderRight: '1px solid var(--m-line-soft)',
+                borderTop: tab.id === activeTabId ? '1px solid var(--m-vein-dim)' : '1px solid transparent',
+              }}
               title={tab.notePath}
               onClick={() => setActiveTab(tab.id)}
               onContextMenu={(e) => handleContextMenu(tab.id, e)}
             >
               {tab.isDirty && (
-                <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" />
+                <span style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: 'var(--m-vein)', flex: '0 0 6px',
+                }} />
               )}
-              <span className="truncate max-w-40">{tab.title}</span>
+              <span style={{
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                fontFamily: tab.notePath.endsWith('.html') ? 'var(--f-mono)' : undefined,
+                fontSize: tab.notePath.endsWith('.html') ? '11.5px' : 12,
+              }}>
+                {tab.title}
+              </span>
               <span
-                className="ml-1 rounded p-0.5 opacity-0 hover:bg-[var(--color-bg-tertiary)] group-hover:opacity-100"
+                style={{
+                  marginLeft: 2, borderRadius: 3, padding: 2,
+                  opacity: 0, color: 'var(--m-fg-3)',
+                }}
+                className="tab-close-btn"
                 onClick={(e) => handleClose(tab.id, e)}
               >
-                <X className="h-3 w-3" />
+                <X size={12} />
               </span>
             </button>
           ))}
         </div>
-        {/* New note button */}
         <button
-          className="flex items-center border-l border-[var(--color-border)] px-3 py-1.5 text-sm text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)]"
-          onClick={handleCreateNote}
-          title={`New note${newNoteHint}`}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 28, color: 'var(--m-fg-3)',
+            borderLeft: '1px solid var(--m-line-soft)',
+          }}
+          onClick={() => {}}
+          title="New note"
         >
-          <Plus className="h-4 w-4" />
+          <Plus size={14} />
         </button>
       </div>
+
+      <style>{`
+        .tab-close-btn:hover { background: var(--m-bg-2); color: var(--m-fg-1); }
+        button:hover .tab-close-btn { opacity: 1; }
+      `}</style>
 
       {/* Tab context menu */}
       {contextMenu && (
         <div
           ref={contextMenuRef}
-          className="fixed z-50 w-40 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-primary)] py-1 shadow-xl"
-          style={{ left: contextMenu.x, top: contextMenu.y }}
+          style={{
+            position: 'fixed', zIndex: 50, width: 160,
+            left: contextMenu.x, top: contextMenu.y,
+            borderRadius: 8, background: 'var(--m-bg-1)',
+            border: '1px solid var(--m-line)',
+            boxShadow: '0 8px 28px rgba(0,0,0,.4)',
+            padding: 4,
+          }}
         >
-          <button
-            className="flex w-full items-center px-3 py-1.5 text-left text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]"
-            onClick={() => {
-              handleClose(contextMenu.tabId, { stopPropagation: () => {} } as React.MouseEvent)
-              setContextMenu(null)
-            }}
-          >
-            Close
-          </button>
-          <button
-            className="flex w-full items-center px-3 py-1.5 text-left text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]"
-            onClick={() => {
-              closeOtherTabs(contextMenu.tabId)
-              setContextMenu(null)
-            }}
-          >
-            Close Others
-          </button>
-          <button
-            className="flex w-full items-center px-3 py-1.5 text-left text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]"
-            onClick={() => {
-              closeAllTabs()
-              setContextMenu(null)
-            }}
-          >
-            Close All
-          </button>
+          {[
+            ['Close', () => { handleClose(contextMenu.tabId, { stopPropagation: () => {} } as React.MouseEvent); setContextMenu(null) }],
+            ['Close Others', () => { closeOtherTabs(contextMenu.tabId); setContextMenu(null) }],
+            ['Close All', () => { closeAllTabs(); setContextMenu(null) }],
+          ].map(([label, action]) => (
+            <button
+              key={label as string}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: '7px 10px', borderRadius: 5,
+                background: 'transparent', color: 'var(--m-fg-1)',
+                fontSize: 13, fontWeight: 500,
+              }}
+              onClick={action as () => void}
+              onMouseOver={e => { e.currentTarget.style.background = 'var(--m-bg-2)' }}
+              onMouseOut={e => { e.currentTarget.style.background = 'transparent' }}
+            >
+              {label as string}
+            </button>
+          ))}
         </div>
       )}
 
       {/* Unsaved changes dialog */}
       {pendingCloseTabId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-96 rounded-lg bg-[var(--color-bg-primary)] p-6 shadow-xl">
-            <h3 className="text-lg font-semibold">Unsaved changes</h3>
-            <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 50,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0,0,0,.5)',
+        }}>
+          <div style={{
+            width: 384, borderRadius: 10,
+            background: 'var(--m-bg-1)', boxShadow: '0 20px 60px rgba(0,0,0,.5)',
+            padding: 24,
+          }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--m-fg)' }}>Unsaved changes</h3>
+            <p style={{ marginTop: 8, fontSize: 13, color: 'var(--m-fg-2)' }}>
               You have unsaved changes. Save before closing?
             </p>
-            <div className="mt-4 flex justify-end gap-2">
+            <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
               <button
-                className="rounded-md px-3 py-1.5 text-sm text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)]"
+                style={{
+                  borderRadius: 6, padding: '6px 14px', fontSize: 13,
+                  color: 'var(--m-fg-2)',
+                }}
                 onClick={handleCancelClose}
               >
                 Cancel
               </button>
               <button
-                className="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700"
+                style={{
+                  borderRadius: 6, padding: '6px 14px', fontSize: 13,
+                  background: 'var(--c-red)', color: '#fff',
+                }}
                 onClick={() => handleDiscardAndClose(pendingCloseTabId!)}
               >
                 Discard
               </button>
               <button
-                className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-sm text-white hover:bg-[var(--color-accent-hover)]"
+                style={{
+                  borderRadius: 6, padding: '6px 14px', fontSize: 13,
+                  background: 'var(--m-vein)', color: '#000',
+                }}
                 onClick={() => handleSaveAndClose(pendingCloseTabId!)}
               >
                 Save
@@ -190,4 +225,3 @@ export default function TabBar() {
     </>
   )
 }
-

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { BookOpen, FolderOpen, ChevronRight, Loader2 } from 'lucide-react'
+import { FolderOpen, ChevronRight, Loader2 } from 'lucide-react'
 import { useVault } from '../../hooks/useVault'
 import { useUiStore } from '../../stores/ui-store'
 
@@ -48,53 +48,168 @@ export default function WelcomeScreen() {
 
   if (autoOpening) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[var(--color-bg-secondary)]">
-        <div className="flex flex-col items-center gap-4 text-[var(--color-text-muted)]">
-          <Loader2 className="h-8 w-8 animate-spin" />
-          <p className="text-sm">Opening vault...</p>
+      <div
+        style={{
+          display: 'flex',
+          height: '100vh',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--m-bg-1)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 16,
+            color: 'var(--m-fg-3)',
+          }}
+        >
+          <Loader2 className="h-8 w-8" style={{ animation: 'spin 1s linear infinite' }} />
+          <p style={{ fontSize: 13 }}>Opening vault...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-[var(--color-bg-secondary)]">
-      <div className="w-full max-w-lg text-center">
-        <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-[var(--color-accent)] shadow-lg">
-          <BookOpen className="h-10 w-10 text-white" />
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--m-bg-1)',
+      }}
+    >
+      <div style={{ width: '100%', maxWidth: 480, textAlign: 'center' }}>
+        {/* Marble logo mark */}
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 24,
+          }}
+        >
+          <div
+            className="marble-mark"
+            style={{ width: 48, height: 48, borderRadius: 10 }}
+          />
         </div>
-        <h1 className="text-4xl font-bold tracking-tight text-[var(--color-text-primary)]">Marble</h1>
-        <p className="mt-2 text-base text-[var(--color-text-secondary)]">
+
+        <h1
+          style={{
+            fontSize: 32,
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+            color: 'var(--m-fg)',
+            margin: 0,
+          }}
+        >
+          Marble
+        </h1>
+
+        <p
+          style={{
+            marginTop: 6,
+            fontSize: 14,
+            color: 'var(--m-fg-3)',
+            lineHeight: 1.5,
+          }}
+        >
           HTML-Native Knowledge Management
         </p>
-        <div className="mt-8 space-y-3">
+
+        <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 py-3 text-white shadow-md transition-all hover:bg-[var(--color-accent-hover)] hover:shadow-lg"
             onClick={handleOpenVault}
+            style={{
+              display: 'inline-flex',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '10px 24px',
+              borderRadius: 8,
+              background: 'var(--m-vein)',
+              color: 'var(--m-bg)',
+              fontWeight: 600,
+              fontSize: 13,
+              border: 0,
+              cursor: 'pointer',
+            }}
           >
-            <FolderOpen className="h-5 w-5" />
+            <FolderOpen style={{ width: 18, height: 18 }} />
             Open Vault
           </button>
         </div>
+
         {recentVaults.length > 0 && (
-          <div className="mt-8">
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Recent Vaults</h3>
-            <div className="space-y-1">
+          <div style={{ marginTop: 32 }}>
+            <h3
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--m-fg-3)',
+                marginBottom: 8,
+              }}
+            >
+              Recent Vaults
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {recentVaults.map((path) => (
                 <button
                   key={path}
-                  className="flex w-full items-center gap-2 truncate rounded-lg px-4 py-2 text-left text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-bg-tertiary)]"
                   onClick={() => handleRecentClick(path)}
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '8px 14px',
+                    borderRadius: 6,
+                    border: 0,
+                    background: 'transparent',
+                    cursor: 'pointer',
+                    color: 'var(--m-fg-1)',
+                    fontSize: 12.5,
+                    textAlign: 'left',
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.background = 'var(--m-bg-2)')}
+                  onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <ChevronRight className="h-3.5 w-3.5 flex-shrink-0 text-[var(--color-text-muted)]" />
-                  <span className="font-medium">{path.split(/[/\\]/).pop()}</span>
-                  <span className="truncate text-xs text-[var(--color-text-muted)]">{path}</span>
+                  <ChevronRight style={{ width: 14, height: 14, flexShrink: 0, color: 'var(--m-fg-3)' }} />
+                  <span style={{ fontWeight: 500 }}>{path.split(/[/\\]/).pop()}</span>
+                  <span
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      fontSize: 11,
+                      color: 'var(--m-fg-3)',
+                    }}
+                  >
+                    {path}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
         )}
-        <p className="mt-12 text-xs text-[var(--color-text-muted)]">
+
+        <p
+          style={{
+            marginTop: 40,
+            fontSize: 11,
+            color: 'var(--m-fg-3)',
+            lineHeight: 1.6,
+            fontFamily: 'var(--f-mono)',
+          }}
+        >
           Notes are stored as HTML files on your local filesystem.
           <br />
           No cloud. No lock-in. Your data, your files.

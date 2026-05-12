@@ -67,7 +67,8 @@ export default function SourceEditor({ content, onChange, syncManager }: SourceE
             '&': {
               height: '100%',
               fontSize: '14px',
-              fontFamily: 'var(--font-mono, "Fira Code", "Cascadia Code", Consolas, monospace)',
+              fontFamily: 'var(--f-mono, "Fira Code", "Cascadia Code", Consolas, monospace)',
+              backgroundColor: 'var(--m-bg-inset)',
             },
             '.cm-scroller': {
               overflow: 'auto',
@@ -75,25 +76,26 @@ export default function SourceEditor({ content, onChange, syncManager }: SourceE
             },
             '.cm-content': {
               padding: '16px',
-              caretColor: 'var(--color-accent, #2196f3)',
+              caretColor: 'var(--m-vein)',
+              color: 'var(--m-fg-1)',
             },
             '.cm-gutters': {
-              borderRight: '1px solid var(--color-border, #333)',
-              backgroundColor: 'var(--color-bg-secondary, #1e1e1e)',
-              color: 'var(--color-text-muted, #666)',
+              borderRight: '1px solid var(--m-line)',
+              backgroundColor: 'transparent',
+              color: 'var(--m-fg-3)',
             },
             '.cm-activeLine': {
-              backgroundColor: 'var(--color-bg-tertiary, rgba(255,255,255,0.05))',
+              backgroundColor: 'var(--m-bg-2)',
             },
             '.cm-selectionBackground, ::selection': {
-              backgroundColor: 'var(--color-accent-muted, rgba(33,150,243,0.3)) !important',
+              backgroundColor: 'var(--m-vein-bg) !important',
             },
             '.cm-cursor': {
-              borderLeftColor: 'var(--color-accent, #2196f3)',
+              borderLeftColor: 'var(--m-vein)',
             },
             '.cm-searchMatch': {
-              backgroundColor: 'var(--color-accent-muted, rgba(33,150,243,0.2))',
-              outline: '1px solid var(--color-accent, #2196f3)',
+              backgroundColor: 'var(--m-vein-bg)',
+              outline: '1px solid var(--m-vein-dim)',
             },
           }),
         ],
@@ -135,7 +137,7 @@ export default function SourceEditor({ content, onChange, syncManager }: SourceE
   return (
     <div
       ref={containerRef}
-      className="h-full w-full overflow-hidden bg-[var(--color-bg-primary)]"
+      style={{ height: '100%', width: '100%', overflow: 'hidden', background: 'var(--m-bg-inset)' }}
     />
   )
 }

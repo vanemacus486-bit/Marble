@@ -17,11 +17,11 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
 
   const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'about', label: t('settings.about'), icon: <Info className="h-4 w-4" /> },
-    { id: 'editor', label: t('settings.editor'), icon: <FileText className="h-4 w-4" /> },
-    { id: 'files-links', label: t('settings.filesAndLinks'), icon: <FolderOpen className="h-4 w-4" /> },
-    { id: 'appearance', label: t('settings.appearance'), icon: <Palette className="h-4 w-4" /> },
-    { id: 'shortcuts', label: t('settings.keyboardShortcuts'), icon: <Keyboard className="h-4 w-4" /> },
+    { id: 'about', label: t('settings.about'), icon: <Info style={{ width: 16, height: 16 }} /> },
+    { id: 'editor', label: t('settings.editor'), icon: <FileText style={{ width: 16, height: 16 }} /> },
+    { id: 'files-links', label: t('settings.filesAndLinks'), icon: <FolderOpen style={{ width: 16, height: 16 }} /> },
+    { id: 'appearance', label: t('settings.appearance'), icon: <Palette style={{ width: 16, height: 16 }} /> },
+    { id: 'shortcuts', label: t('settings.keyboardShortcuts'), icon: <Keyboard style={{ width: 16, height: 16 }} /> },
   ]
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('about')
@@ -45,68 +45,161 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.4)',
+      }}
       onKeyDown={handleKeyDown}
     >
       <div
         ref={dialogRef}
-        className="flex h-[550px] w-[750px] overflow-hidden rounded-lg bg-[var(--color-bg-primary)] shadow-2xl"
+        style={{
+          display: 'flex',
+          height: 550,
+          width: 750,
+          overflow: 'hidden',
+          borderRadius: 10,
+          background: 'var(--m-bg-1)',
+          border: '1px solid var(--m-line)',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+        }}
         role="dialog"
         aria-labelledby="settings-title"
         tabIndex={-1}
       >
         {/* Left Sidebar */}
-        <div className="flex w-[200px] flex-shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-          <div className="border-b border-[var(--color-border)] px-4 py-3">
-            <h2 id="settings-title" className="text-base font-semibold text-[var(--color-text-primary)]">
+        <div
+          style={{
+            width: 200,
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            borderRight: '1px solid var(--m-line-soft)',
+            background: 'var(--m-bg)',
+          }}
+        >
+          <div
+            style={{
+              padding: '12px 16px',
+              borderBottom: '1px solid var(--m-line-soft)',
+            }}
+          >
+            <h2
+              id="settings-title"
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: 'var(--m-fg)',
+                margin: 0,
+              }}
+            >
               {t('settings.title')}
             </h2>
           </div>
-          <nav className="flex-1 overflow-y-auto py-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
-                  activeTab === tab.id
-                    ? 'border-r-2 border-[var(--color-accent)] bg-[var(--color-bg-tertiary)] text-[var(--color-accent)]'
-                    : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span className={`flex h-6 w-6 items-center justify-center rounded text-xs ${activeTab === tab.id ? 'bg-[var(--color-accent)] text-white' : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)]'}`}>
-                  {tab.icon}
-                </span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          <nav style={{ flex: 1, overflowY: 'auto', paddingTop: 4 }}>
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '8px 16px',
+                    fontSize: 12.5,
+                    textAlign: 'left',
+                    border: 0,
+                    background: isActive ? 'var(--m-bg-2)' : 'transparent',
+                    color: isActive ? 'var(--m-fg)' : 'var(--m-fg-1)',
+                    cursor: 'pointer',
+                    borderLeft: isActive ? '2px solid var(--m-vein)' : '2px solid transparent',
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'flex',
+                      width: 22,
+                      height: 22,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 4,
+                      background: isActive ? 'var(--m-vein-bg)' : 'var(--m-bg-2)',
+                      color: isActive ? 'var(--m-vein)' : 'var(--m-fg-3)',
+                      fontSize: 11,
+                    }}
+                  >
+                    {tab.icon}
+                  </span>
+                  <span>{tab.label}</span>
+                </button>
+              )
+            })}
           </nav>
         </div>
 
         {/* Right Content Area */}
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {/* Header row */}
-          <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
-            <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px 20px',
+              borderBottom: '1px solid var(--m-line-soft)',
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--m-fg)',
+                margin: 0,
+              }}
+            >
               {activeTabMeta?.label}
             </h3>
-            <div className="flex items-center gap-3">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               {savedIndicator && (
-                <span className="animate-pulse text-xs text-[var(--color-text-muted)]">
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    color: 'var(--m-vein)',
+                    fontFamily: 'var(--f-mono)',
+                  }}
+                >
                   {savedIndicator}
                 </span>
               )}
               <button
-                className="flex h-6 w-6 items-center justify-center rounded text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)]"
                 onClick={onClose}
-                aria-label={t('settings.close')}
+                style={{
+                  display: 'flex',
+                  width: 22,
+                  height: 22,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 5,
+                  border: 0,
+                  color: 'var(--m-fg-3)',
+                  cursor: 'pointer',
+                }}
               >
-                <X className="h-4 w-4" />
+                <X style={{ width: 16, height: 16 }} />
               </button>
             </div>
           </div>
 
           {/* Tab content */}
-          <div className="flex-1 overflow-y-auto p-5">
+          <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
             {activeTab === 'about' && <SettingsTabAbout />}
             {activeTab === 'editor' && <SettingsTabEditor onSaved={showSaved} />}
             {activeTab === 'files-links' && <SettingsTabFilesLinks onSaved={showSaved} />}

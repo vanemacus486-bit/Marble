@@ -1,56 +1,42 @@
 import type { SearchResult } from '../../types'
 
-interface SearchResultItemProps {
-  result: SearchResult
-  isSelected: boolean
-  onClick: () => void
-}
+interface Props { result: SearchResult; isSelected: boolean; onClick: () => void }
 
-export default function SearchResultItem({ result, isSelected, onClick }: SearchResultItemProps) {
-  const highlightText = (text: string, maxLen = 200): string => {
-    return text.length > maxLen ? text.substring(0, maxLen) + '...' : text
-  }
+export default function SearchResultItem({ result, isSelected, onClick }: Props) {
+  const highlightText = (text: string, maxLen = 200): string =>
+    text.length > maxLen ? text.substring(0, maxLen) + '...' : text
 
   return (
     <button
-      className={`w-full px-3 py-2 text-left transition-colors ${
-        isSelected
-          ? 'bg-[var(--color-accent)] text-white'
-          : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-      }`}
       onClick={onClick}
+      style={{
+        display: 'block', width: '100%', textAlign: 'left',
+        padding: '8px 12px',
+        background: isSelected ? 'var(--m-bg-2)' : 'transparent',
+        color: isSelected ? 'var(--m-fg)' : 'var(--m-fg-1)',
+        position: 'relative',
+        transition: 'background .12s',
+        borderBottom: '1px solid var(--m-line-soft)',
+      }}
+      onMouseOver={e => { if (!isSelected) e.currentTarget.style.background = 'oklch(0.20 0.006 260)' }}
+      onMouseOut={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
     >
-      <div
-        className={`text-sm font-medium ${
-          isSelected ? 'text-white' : 'text-[var(--color-text-primary)]'
-        }`}
-      >
+      {isSelected && (
+        <span style={{ position: 'absolute', left: 0, top: 4, bottom: 4, width: 2, background: 'var(--m-vein)', borderRadius: 2 }} />
+      )}
+      <div style={{ fontSize: 13, fontWeight: 500, color: isSelected ? 'var(--m-fg)' : 'var(--m-fg-1)' }}>
         {result.title}
         {result.matchType === 'title' && (
-          <span
-            className={`ml-1.5 text-xs ${
-              isSelected ? 'text-white/70' : 'text-[var(--color-accent)]'
-            }`}
-          >
-            (title match)
-          </span>
+          <span style={{ marginLeft: 6, fontSize: 10, color: isSelected ? 'var(--m-fg-2)' : 'var(--m-vein)' }}>(title match)</span>
         )}
       </div>
       {result.path !== result.title && (
-        <div
-          className={`mt-0.5 truncate text-xs ${
-            isSelected ? 'text-white/60' : 'text-[var(--color-text-muted)]'
-          }`}
-        >
+        <div style={{ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 11, color: 'var(--m-fg-3)' }}>
           {result.path}
         </div>
       )}
       {result.snippet && (
-        <div
-          className={`mt-1 line-clamp-2 text-xs leading-relaxed ${
-            isSelected ? 'text-white/70' : 'text-[var(--color-text-muted)]'
-          }`}
-        >
+        <div style={{ marginTop: 4, fontSize: 11, lineHeight: 1.45, color: 'var(--m-fg-2)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {highlightText(result.snippet)}
         </div>
       )}

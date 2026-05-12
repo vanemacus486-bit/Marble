@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-type LeftSidebarTab = 'explorer' | 'search' | 'tags'
+export type LeftSidebarTab = 'files' | 'search' | 'graph' | 'comp' | 'data' | 'tags'
 type RightSidebarTab = 'backlinks' | 'outline' | 'properties'
 
 interface UiState {
@@ -41,7 +41,7 @@ export const useUiStore = create<UiState>((set) => ({
   rightSidebarOpen: true,
   leftSidebarWidth: 280,
   rightSidebarWidth: 300,
-  leftSidebarTab: 'explorer',
+  leftSidebarTab: 'files',
   rightSidebarTab: 'backlinks',
   theme: 'system',
   locale: 'en-US',

@@ -21,7 +21,7 @@ export default function QuickSwitcher() {
     ? noteList.filter(
         (n) =>
           n.title.toLowerCase().includes(query.toLowerCase()) ||
-          n.id.toLowerCase().includes(query.toLowerCase())
+          n.id.toLowerCase().includes(query.toLowerCase()),
       )
     : noteList
 
@@ -46,36 +46,111 @@ export default function QuickSwitcher() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 pt-[20vh]">
-      <div className="w-full max-w-lg rounded-lg bg-[var(--color-bg-primary)] shadow-2xl">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.4)',
+        paddingTop: '20vh',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 500,
+          borderRadius: 10,
+          background: 'var(--m-bg-1)',
+          border: '1px solid var(--m-line)',
+          overflow: 'hidden',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+        }}
+      >
         <input
           ref={inputRef}
-          className="w-full rounded-t-lg border-b border-[var(--color-border)] bg-transparent px-4 py-3 text-lg text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none"
           placeholder="Search notes..."
           value={query}
-          onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0) }}
+          onChange={(e) => {
+            setQuery(e.target.value)
+            setSelectedIndex(0)
+          }}
           onKeyDown={handleKeyDown}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            fontSize: 14,
+            border: 0,
+            borderBottom: '1px solid var(--m-line-soft)',
+            background: 'transparent',
+            color: 'var(--m-fg)',
+            outline: 0,
+            fontFamily: 'var(--f-ui)',
+          }}
         />
-        <div className="max-h-80 overflow-y-auto">
-          {filtered.slice(0, 50).map((note, i) => (
-            <button
-              key={note.id}
-              className={`w-full px-4 py-2 text-left text-sm transition-colors ${
-                i === selectedIndex
-                  ? 'bg-[var(--color-accent)] text-white'
-                  : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-              }`}
-              onClick={() => handleSelect(note.id)}
-            >
-              <span className="font-medium">{note.title}</span>
-              <span className="ml-2 text-xs opacity-60">{note.id}</span>
-            </button>
-          ))}
+        <div style={{ maxHeight: 320, overflowY: 'auto' }}>
+          {filtered.slice(0, 50).map((note, i) => {
+            const isSelected = i === selectedIndex
+            return (
+              <button
+                key={note.id}
+                onClick={() => handleSelect(note.id)}
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 16px',
+                  fontSize: 12.5,
+                  textAlign: 'left',
+                  border: 0,
+                  cursor: 'pointer',
+                  background: isSelected ? 'var(--m-bg-2)' : 'transparent',
+                  color: isSelected ? 'var(--m-fg)' : 'var(--m-fg-1)',
+                  borderLeft: isSelected ? '2px solid var(--m-vein)' : '2px solid transparent',
+                }}
+              >
+                <span style={{ fontWeight: 500 }}>{note.title}</span>
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: 'var(--m-fg-3)',
+                    fontFamily: 'var(--f-mono)',
+                  }}
+                >
+                  {note.id}
+                </span>
+              </button>
+            )
+          })}
           {filtered.length === 0 && (
-            <p className="px-4 py-4 text-sm text-[var(--color-text-muted)]">
+            <p
+              style={{
+                padding: '14px 16px',
+                fontSize: 12.5,
+                color: 'var(--m-fg-3)',
+                margin: 0,
+              }}
+            >
               No notes found
             </p>
           )}
+        </div>
+        <div
+          style={{
+            padding: '8px 14px',
+            borderTop: '1px solid var(--m-line-soft)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: 10.5,
+            color: 'var(--m-fg-3)',
+            fontFamily: 'var(--f-mono)',
+          }}
+        >
+          <span>&uarr;&darr; navigate &middot; &crarr; open</span>
+          <span>esc to close</span>
         </div>
       </div>
     </div>

@@ -1,9 +1,34 @@
 export default function LoadingScreen() {
   return (
-    <div className="flex h-screen items-center justify-center bg-[var(--color-bg-primary)]">
-      <div className="text-center">
-        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)]" />
-        <p className="mt-4 text-sm text-[var(--color-text-muted)]">
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--m-bg)',
+      }}
+    >
+      <div style={{ textAlign: 'center' }}>
+        {/* Pulsing marble mark */}
+        <div
+          className="marble-mark"
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 6,
+            margin: '0 auto',
+            animation: 'pulse 1.5s ease-in-out infinite',
+          }}
+        />
+        <p
+          style={{
+            marginTop: 16,
+            fontSize: 12.5,
+            color: 'var(--m-fg-3)',
+            fontFamily: 'var(--f-mono)',
+          }}
+        >
           Loading vault...
         </p>
       </div>

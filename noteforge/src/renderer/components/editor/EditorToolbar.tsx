@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Editor } from '@tiptap/react'
 import {
@@ -44,11 +44,12 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
   if (!editor) return null
 
   const editorStore = useEditorStore
+  const [hoveredBtn, setHoveredBtn] = useState<string | null>(null)
 
   const saveShortcut = getEffectiveShortcut('save')
   const findShortcut = getEffectiveShortcut('find')
 
-  const iconCls = 'h-3.5 w-3.5'
+  const iconCls = 'tb-icon'
 
   const toolbarButtons: ToolbarButton[][] = [
     [
@@ -183,24 +184,40 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 border-b border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-2 py-1">
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2, borderBottom: '1px solid var(--m-line)', background: 'var(--m-bg-1)', padding: '4px 8px' }}>
+      <style>{'.tb-icon{width:14px;height:14px}'}</style>
       {toolbarButtons.map((group, gi) => (
-        <div key={gi} className="flex items-center gap-0.5">
-          {gi > 0 && <div className="mx-1 h-5 w-px bg-[var(--color-border)]" />}
-          {group.map((btn) => (
-            <button
-              key={btn.labelKey}
-              className={`rounded px-1.5 py-1 text-xs transition-colors ${
-                btn.isActive?.()
-                  ? 'bg-[var(--color-accent)] text-white'
-                  : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-              }`}
-              onClick={btn.action}
-              title={getTooltip(btn)}
-            >
-              {btn.icon}
-            </button>
-          ))}
+        <div key={gi} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {gi > 0 && <div style={{ margin: '0 4px', height: 20, width: 1, background: 'var(--m-line)' }} />}
+          {group.map((btn) => {
+            const isHovered = hoveredBtn === btn.labelKey
+            const isActive = btn.isActive?.()
+            return (
+              <button
+                key={btn.labelKey}
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: 5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 11,
+                  transition: 'all .12s',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: (isActive || isHovered) ? 'var(--m-bg-2)' : 'transparent',
+                  color: (isActive || isHovered) ? 'var(--m-fg-1)' : 'var(--m-fg-3)',
+                }}
+                onClick={btn.action}
+                title={getTooltip(btn)}
+                onMouseEnter={() => setHoveredBtn(btn.labelKey)}
+                onMouseLeave={() => setHoveredBtn(null)}
+              >
+                {btn.icon}
+              </button>
+            )
+          })}
         </div>
       ))}
     </div>

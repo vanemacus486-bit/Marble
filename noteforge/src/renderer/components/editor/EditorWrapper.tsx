@@ -73,6 +73,7 @@ export default function EditorWrapper({ tabId, content, editMode, onSync, onEdit
     editorProps: {
       attributes: {
         class: 'prose prose-lg max-w-none focus:outline-none',
+        style: 'font-family: var(--f-text);',
       },
     },
   })
@@ -92,8 +93,12 @@ export default function EditorWrapper({ tabId, content, editMode, onSync, onEdit
   if (!editor) return null
 
   return (
-    <div className="h-full overflow-y-auto px-6 py-4">
-      <EditorContent editor={editor} className="min-h-full" />
+    <div style={{ height: '100%', overflowY: 'auto', padding: '32px 80px', background: 'transparent' }}>
+      <style>{`
+        .ProseMirror ::selection { background: var(--m-vein-bg); }
+        .ProseMirror code { font-family: var(--f-mono); }
+      `}</style>
+      <EditorContent editor={editor} style={{ minHeight: '100%' }} />
       <FloatingToolbar editor={editor} />
     </div>
   )

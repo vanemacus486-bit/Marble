@@ -120,36 +120,73 @@ export default function CommandPalette() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 pt-[20vh]">
-      <div className="w-full max-w-lg rounded-lg bg-[var(--color-bg-primary)] shadow-2xl">
-        <input
-          ref={inputRef}
-          className="w-full rounded-t-lg border-b border-[var(--color-border)] bg-transparent px-4 py-3 text-lg text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none"
-          placeholder="Type a command..."
-          value={query}
-          onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0) }}
-          onKeyDown={handleKeyDown}
-        />
-        <div className="max-h-80 overflow-y-auto">
+    <div onClick={close} style={{
+      position: 'fixed', inset: 0, zIndex: 50,
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(2px)',
+      display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
+      paddingTop: 120,
+    }}>
+      <div onClick={(e) => e.stopPropagation()} style={{
+        width: 520,
+        background: 'var(--m-bg-1)',
+        border: '1px solid var(--m-line)',
+        borderRadius: 10,
+        overflow: 'hidden',
+        boxShadow: '0 30px 80px rgba(0,0,0,0.50)',
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '12px 16px',
+          borderBottom: '1px solid var(--m-line-soft)',
+        }}>
+          <input
+            ref={inputRef}
+            style={{
+              flex: 1, background: 'none', border: 0, outline: 0,
+              color: 'var(--m-fg)', fontSize: 14, fontFamily: 'var(--f-ui)',
+            }}
+            placeholder="Type a command..."
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0) }}
+            onKeyDown={handleKeyDown}
+          />
+          <span className="m-kbd">esc</span>
+        </div>
+        <div style={{ maxHeight: 320, overflowY: 'auto' }}>
           {filtered.map((cmd, i) => {
             const shortcutText = getShortcutText(cmd.shortcutId)
             return (
               <button
                 key={cmd.id}
-                className={`flex w-full items-center justify-between px-4 py-2 text-left text-sm transition-colors ${
-                  i === selectedIndex
-                    ? 'bg-[var(--color-accent)] text-white'
-                    : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
-                }`}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  width: '100%', padding: '9px 14px', fontSize: 13,
+                  background: i === selectedIndex ? 'var(--m-bg-2)' : 'transparent',
+                  color: i === selectedIndex ? 'var(--m-fg)' : 'var(--m-fg-1)',
+                  borderLeft: i === selectedIndex ? '2px solid var(--m-vein)' : '2px solid transparent',
+                  cursor: 'pointer', textAlign: 'left',
+                  borderRight: 0, borderTop: 0, borderBottom: 0,
+                  transition: 'all .1s',
+                }}
                 onClick={() => { cmd.action(); close() }}
+                onMouseEnter={() => setSelectedIndex(i)}
               >
-                <span>{cmd.label}</span>
+                <span style={{ flex: 1 }}>{cmd.label}</span>
                 {shortcutText && (
-                  <span className="ml-2 text-xs opacity-60">{shortcutText}</span>
+                  <span className="m-kbd">{shortcutText}</span>
                 )}
               </button>
             )
           })}
+        </div>
+        <div style={{
+          padding: '8px 14px', borderTop: '1px solid var(--m-line-soft)',
+          fontSize: 11, color: 'var(--m-fg-3)', fontFamily: 'var(--f-mono)',
+          display: 'flex', justifyContent: 'space-between',
+        }}>
+          <span>up/down navigate &middot; enter run</span>
+          <span>{commands.length} commands</span>
         </div>
       </div>
     </div>

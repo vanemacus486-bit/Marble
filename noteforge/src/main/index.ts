@@ -84,11 +84,43 @@ function createWindow(): void {
 
 // ── Vault lifecycle ──
 
-function initVaultServices(vaultPath: string): void {
+async function initVaultServices(vaultPath: string): Promise<void> {
   vaultManager = new VaultManager(vaultPath)
   configManager = new ConfigManager(vaultPath)
   indexBuilder = new IndexBuilder(vaultManager, noteParser, searchIndexer)
   fileWatcher = new FileWatcher(vaultPath, ['.git', 'node_modules', '.marble'])
+
+  // Wire file watcher events to renderer windows and search index
+  fileWatcher.onChange((events: FileChangeEvent[]) => {
+    for (const windowId of subscribedWindows) {
+      const win = BrowserWindow.fromId(windowId)
+      if (win && !win.isDestroyed()) {
+        win.webContents.send(IPC_CHANNELS.FW_FILE_CHANGED, events)
+      }
+    }
+    if (indexBuilder) {
+      for (const event of events) {
+        indexBuilder.incrementalUpdate(event).catch(err =>
+          console.error('Incremental index update failed:', err)
+        )
+      }
+    }
+  })
+
+  await fileWatcher.start()
+
+  // Build initial search index in background
+  indexBuilder.buildFull((progress) => {
+    BrowserWindow.getAllWindows().forEach(w => {
+      if (!w.isDestroyed()) w.webContents.send(IPC_CHANNELS.INDEX_PROGRESS, progress)
+    })
+  }).then(() => {
+    BrowserWindow.getAllWindows().forEach(w => {
+      if (!w.isDestroyed()) w.webContents.send(IPC_CHANNELS.INDEX_COMPLETE)
+    })
+  }).catch(err => {
+    console.error('Index build failed:', err)
+  })
 }
 
 // ── IPC Registration ──
@@ -102,7 +134,7 @@ function registerAllIpc(): void {
   })
 
   ipcMain.handle(IPC_CHANNELS.VAULT_OPEN, async (_e, vaultPath: string) => {
-    initVaultServices(vaultPath)
+    await initVaultServices(vaultPath)
   })
 
   ipcMain.handle(IPC_CHANNELS.VAULT_LIST_FILES, async (_e, dir?: string) => {
@@ -206,7 +238,14 @@ function registerAllIpc(): void {
   }))
   ipcMain.handle(IPC_CHANNELS.INDEX_BUILD, async () => {
     if (!indexBuilder) throw new Error('No vault open')
-    for await (const _progress of indexBuilder.buildFullGenerator()) { /* progress handled in index-builder */ }
+    await indexBuilder.buildFull((progress) => {
+      BrowserWindow.getAllWindows().forEach(w => {
+        if (!w.isDestroyed()) w.webContents.send(IPC_CHANNELS.INDEX_PROGRESS, progress)
+      })
+    })
+    BrowserWindow.getAllWindows().forEach(w => {
+      if (!w.isDestroyed()) w.webContents.send(IPC_CHANNELS.INDEX_COMPLETE)
+    })
   })
 
   // Export
