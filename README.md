@@ -1,5 +1,10 @@
 <div align="center">
-<img src="noteforge/resources/icon.png" width="120" alt="Marble" />
+ 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dd2f32a6-275d-47d0-b99b-11dc4f48e5b4" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c003b5fe-4087-40c9-92b1-30469c62864f" />
+
+
 # Marble
  
 **HTML 原生的本地知识管理工具**
