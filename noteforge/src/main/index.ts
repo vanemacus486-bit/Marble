@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, session, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, Menu, session, ipcMain, dialog } from 'electron'
 import { join, resolve as pathResolve } from 'path'
 import fs from 'fs/promises'
 import { VaultManager } from './services/vault-manager'
@@ -55,7 +55,7 @@ function createWindow(): void {
       responseHeaders: {
         ...details.responseHeaders,
         'Content-Security-Policy': [
-          `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self' data:; connect-src ${connectSrc}; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'`
+          `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'; font-src 'self' data:; connect-src ${connectSrc}; frame-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'`
         ]
       }
     })
@@ -247,6 +247,7 @@ function registerAllIpc(): void {
 // ── Lifecycle ──
 
 app.whenReady().then(async () => {
+  Menu.setApplicationMenu(null)
   appStore = await loadAppStore()
   createWindow()
   registerAllIpc()

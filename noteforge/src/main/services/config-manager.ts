@@ -16,7 +16,8 @@ const vaultConfigSchema = z.object({
     tabSize: z.number().int().min(1).max(8).default(2),
     spellcheck: z.boolean().default(true),
     autoPairBrackets: z.boolean().default(true),
-    defaultEditMode: z.enum(['wysiwyg', 'source']).default('wysiwyg'),
+    enableWysiwyg: z.boolean().default(false),
+    defaultEditMode: z.enum(['source', 'wysiwyg', 'read']).default('source'),
   }).default({}),
   graph: z.object({
     showArrows: z.boolean().default(true),

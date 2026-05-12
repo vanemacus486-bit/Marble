@@ -1,18 +1,35 @@
-import { useState, useEffect, useCallback } from 'react'
-import { BookOpen, FolderOpen, ChevronRight } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { BookOpen, FolderOpen, ChevronRight, Loader2 } from 'lucide-react'
 import { useVault } from '../../hooks/useVault'
 import { useUiStore } from '../../stores/ui-store'
 
 export default function WelcomeScreen() {
   const [recentVaults, setRecentVaults] = useState<string[]>([])
+  const [autoOpening, setAutoOpening] = useState(false)
   const { openVaultDialog, openVault } = useVault()
   const addToast = useUiStore((s) => s.addToast)
+  const triedAutoOpen = useRef(false)
 
   useEffect(() => {
-    window.electronAPI.getAppConfig().then((config) => {
+    if (triedAutoOpen.current) return
+    triedAutoOpen.current = true
+
+    window.electronAPI.getAppConfig().then(async (config) => {
       setRecentVaults(config.recentVaults)
+
+      if (config.lastVaultPath) {
+        setAutoOpening(true)
+        try {
+          await openVault(config.lastVaultPath)
+          return
+        } catch {
+          addToast('Last vault is no longer accessible', 'error')
+        } finally {
+          setAutoOpening(false)
+        }
+      }
     })
-  }, [])
+  }, [openVault, addToast])
 
   const handleOpenVault = useCallback(async () => {
     const path = await openVaultDialog()
@@ -27,6 +44,17 @@ export default function WelcomeScreen() {
     } catch {
       addToast('Vault not found', 'error')
     }
+  }
+
+  if (autoOpening) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[var(--color-bg-secondary)]">
+        <div className="flex flex-col items-center gap-4 text-[var(--color-text-muted)]">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <p className="text-sm">Opening vault...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

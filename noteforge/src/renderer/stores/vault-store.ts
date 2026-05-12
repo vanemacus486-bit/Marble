@@ -44,6 +44,14 @@ export const useVaultStore = create<VaultState>((set, get) => ({
       const files = await window.electronAPI.listFiles(path)
       const name = path.split(/[/\\]/).pop() || 'Untitled Vault'
 
+      const appConfig = await window.electronAPI.getAppConfig()
+      const recent = appConfig.recentVaults.filter((p) => p !== path)
+      recent.unshift(path)
+      await window.electronAPI.setAppConfig({
+        lastVaultPath: path,
+        recentVaults: recent.slice(0, 10),
+      })
+
       set({
         vaultPath: path,
         vaultName: name,

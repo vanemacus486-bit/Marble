@@ -28,12 +28,13 @@ const lowlight = createLowlight(common)
 interface EditorWrapperProps {
   tabId: string
   content: string
-  editMode: 'wysiwyg' | 'source'
+  editMode: 'source' | 'wysiwyg' | 'read'
+  onSync?: (html: string) => void
+  onEditorReady?: (editor: ReturnType<typeof useEditor>) => void
 }
 
-export default function EditorWrapper({ tabId, content, editMode }: EditorWrapperProps) {
+export default function EditorWrapper({ tabId, content, editMode, onSync, onEditorReady }: EditorWrapperProps) {
   const setContent = useEditorStore((s) => s.setContent)
-  const editorRef = useRef<ReturnType<typeof useEditor>>()
 
   const editor = useEditor({
     extensions: [
@@ -67,6 +68,7 @@ export default function EditorWrapper({ tabId, content, editMode }: EditorWrappe
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       setContent(tabId, html)
+      onSync?.(html)
     },
     editorProps: {
       attributes: {
@@ -76,12 +78,18 @@ export default function EditorWrapper({ tabId, content, editMode }: EditorWrappe
   })
 
   useEffect(() => {
+    if (editor && onEditorReady) {
+      onEditorReady(editor)
+    }
+  }, [editor, onEditorReady])
+
+  useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content)
     }
   }, [content, editor])
 
-  if (!editor || editMode === 'source') return null
+  if (!editor) return null
 
   return (
     <div className="h-full overflow-y-auto px-6 py-4">

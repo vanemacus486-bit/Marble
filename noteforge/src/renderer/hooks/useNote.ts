@@ -32,10 +32,10 @@ export function useNote(notePath: string | null) {
     content: activeTab?.content ?? null,
     isLoading: !tab,
     isDirty: tab?.isDirty ?? false,
-    editMode: tab?.editMode ?? 'wysiwyg',
+    editMode: tab?.editMode ?? 'source',
     setContent,
     save,
-    setEditMode: tab ? (mode: 'wysiwyg' | 'source') => store.setEditMode(tab.id, mode) : undefined,
+    setEditMode: tab ? (mode: 'source' | 'wysiwyg' | 'read') => store.setEditMode(tab.id, mode) : undefined,
     toggleEditMode: tab ? () => store.toggleEditMode(tab.id) : undefined,
   }
 }

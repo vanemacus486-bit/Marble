@@ -7,6 +7,7 @@ export default function StatusBar() {
   const { t } = useTranslation()
   const activeTab = useEditorStore((s) => s.tabs.find((t) => t.id === s.activeTabId))
   const toggleEditMode = useEditorStore((s) => s.toggleEditMode)
+  const enableWysiwyg = useVaultStore((s) => s.config?.editor?.enableWysiwyg) ?? false
   const vaultPath = useVaultStore((s) => s.vaultPath)
   const vaultName = useVaultStore((s) => s.vaultName)
 
@@ -32,7 +33,7 @@ export default function StatusBar() {
 
   const handleCycleEditMode = () => {
     if (activeTab) {
-      toggleEditMode(activeTab.id)
+      toggleEditMode(activeTab.id, enableWysiwyg)
     }
   }
 
@@ -49,7 +50,7 @@ export default function StatusBar() {
               onClick={handleCycleEditMode}
               title={`${t('commandPalette.toggleEditMode')}${editModeHint}`}
             >
-              {activeTab.editMode === 'wysiwyg' ? 'WYSIWYG' : 'Source'}
+              {activeTab.editMode === 'source' ? 'Source' : activeTab.editMode === 'wysiwyg' ? 'Edit' : 'Read'}
             </button>
             {activeTab.isDirty && (
               <span className="rounded-full bg-[var(--color-warning)] px-2 py-0.5 text-xs text-white">{t('statusbar.unsaved')}</span>

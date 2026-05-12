@@ -1,11 +1,13 @@
 import { create } from 'zustand'
 import type { NoteProperties } from '../types'
 
+export type EditMode = 'source' | 'wysiwyg' | 'read'
+
 interface EditorTab {
   id: string
   notePath: string
   title: string
-  editMode: 'wysiwyg' | 'source'
+  editMode: EditMode
   isDirty: boolean
   content: string | null
   savedContent: string | null
@@ -41,8 +43,8 @@ interface EditorState {
   autoSave: (tabId: string) => Promise<void>
 
   // Mode
-  setEditMode: (tabId: string, mode: 'wysiwyg' | 'source') => void
-  toggleEditMode: (tabId: string) => void
+  setEditMode: (tabId: string, mode: EditMode) => void
+  toggleEditMode: (tabId: string, enableWysiwyg?: boolean) => void
 
   // Split pane
   createSplit: (tabId: string, orientation: 'horizontal' | 'vertical') => void
@@ -87,7 +89,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       id: generateTabId(),
       notePath,
       title: (() => { const m = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i); return m ? m[1].trim() : (props.title || notePath.split('/').pop()?.replace('.html', '') || 'Untitled') })(),
-      editMode: 'wysiwyg',
+      editMode: 'source',
       isDirty: false,
       content,
       savedContent: content,
@@ -168,11 +170,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     }))
   },
 
-  toggleEditMode: (tabId: string) => {
+  toggleEditMode: (tabId: string, enableWysiwyg = false) => {
+    const order: EditMode[] = enableWysiwyg
+      ? ['source', 'wysiwyg', 'read']
+      : ['source', 'read']
     set((s) => ({
       tabs: s.tabs.map((t) => {
         if (t.id !== tabId) return t
-        return { ...t, editMode: t.editMode === 'wysiwyg' ? 'source' : 'wysiwyg' }
+        const idx = order.indexOf(t.editMode)
+        return { ...t, editMode: order[(idx + 1) % order.length] }
       }),
     }))
   },

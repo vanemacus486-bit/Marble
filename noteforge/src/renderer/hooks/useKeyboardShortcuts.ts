@@ -40,7 +40,7 @@ export function useKeyboardShortcuts() {
         const tab = editor.activeTab()
         if (tab) editor.toggleEditMode(tab.id)
       },
-      'find': () => editor.showFindReplace(),
+'find': () => editor.showFindReplace(),
       'search': () => { search.setOpen(true) },
       'settings': () => ui.setSettingsOpen(true),
       'next-tab': () => {

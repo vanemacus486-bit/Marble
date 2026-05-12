@@ -4,8 +4,9 @@ import { useFileWatcher } from '../../hooks/useFileWatcher'
 import { useTheme } from '../../hooks/useTheme'
 import { useUiStore } from '../../stores/ui-store'
 import { useEditorStore } from '../../stores/editor-store'
+import { useVaultStore } from '../../stores/vault-store'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Eye, Pencil, Code2 } from 'lucide-react'
 import Sidebar from './Sidebar'
 import TabBar from './TabBar'
 import StatusBar from './StatusBar'
@@ -16,16 +17,18 @@ import CommandPalette from '../navigation/CommandPalette'
 import SettingsDialog from '../dialogs/SettingsDialog'
 import EditorWrapper from '../editor/EditorWrapper'
 import EditorToolbar from '../editor/EditorToolbar'
-import LinkAutocomplete from '../editor/LinkAutocomplete'
 import SourceEditor from '../editor/SourceEditor'
+import ReadOnlyView from '../editor/ReadOnlyView'
+import LinkAutocomplete from '../editor/LinkAutocomplete'
 import FindReplace from '../editor/FindReplace'
 import TableMenu from '../editor/TableMenu'
 import ImageUploader from '../editor/ImageUploader'
 import BacklinksPanel from '../panels/BacklinksPanel'
 import OutlinePanel from '../panels/OutlinePanel'
 import PropertiesPanel from '../panels/PropertiesPanel'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { ContextMenuProvider } from '../ui/ContextMenu'
+import type { EditMode } from '../../stores/editor-store'
 
 export default function AppShell() {
   const { isLoaded, isLoading } = useVault()
@@ -46,11 +49,38 @@ export default function AppShell() {
   const removeToast = useUiStore((s) => s.removeToast)
 
   const [editor, setEditor] = useState<any>(null)
+  const toggleEditMode = useEditorStore((s) => s.toggleEditMode)
+  const enableWysiwyg = useVaultStore((s) => s.config?.editor?.enableWysiwyg) ?? false
   const [rightSections, setRightSections] = useState<Record<string, boolean>>({
     backlinks: true,
     outline: true,
     properties: false,
   })
+
+  const modeOrder: EditMode[] = useMemo(
+    () => (enableWysiwyg ? ['source', 'wysiwyg', 'read'] : ['source', 'read']),
+    [enableWysiwyg],
+  )
+
+  const modeIcons: Record<EditMode, typeof Eye> = {
+    source: Code2,
+    wysiwyg: Pencil,
+    read: Eye,
+  }
+  const modeLabels: Record<EditMode, string> = {
+    source: 'Source',
+    wysiwyg: 'Edit',
+    read: 'Read',
+  }
+
+  const getNextMode = (current: EditMode): EditMode => {
+    const idx = modeOrder.indexOf(current)
+    return modeOrder[(idx + 1) % modeOrder.length]
+  }
+
+  const handleToggleMode = (tabId: string, current: EditMode) => {
+    toggleEditMode(tabId, enableWysiwyg)
+  }
 
   const toggleSection = (id: string) => {
     setRightSections((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -62,8 +92,16 @@ export default function AppShell() {
     { id: 'properties', label: t('appshell.properties'), Panel: PropertiesPanel },
   ]
 
+  const handleEditorReady = useCallback((editorInstance: any) => {
+    setEditor(editorInstance)
+  }, [])
+
   if (isLoading) return <LoadingScreen />
   if (!isLoaded) return <WelcomeScreen />
+
+  const currentMode = activeTab?.editMode ?? 'source'
+  const NextModeIcon = modeIcons[getNextMode(currentMode)]
+  const nextModeLabel = modeLabels[getNextMode(currentMode)]
 
   return (
     <ContextMenuProvider>
@@ -76,21 +114,49 @@ export default function AppShell() {
               <div className="flex flex-1 flex-col overflow-hidden">
                 {activeTab ? (
                   <>
-                    <EditorToolbar editor={editor} />
-                    {findReplaceVisible && <FindReplace />}
+                    <div className="relative flex items-center justify-between">
+                      {currentMode === 'wysiwyg' && (
+                        <>
+                          <EditorToolbar editor={editor} />
+                          {findReplaceVisible && <FindReplace />}
+                        </>
+                      )}
+                      {currentMode === 'source' && (
+                        <div className="flex items-center gap-2 px-3 py-1 text-xs text-[var(--color-text-muted)]">
+                          <Code2 className="h-3.5 w-3.5" />
+                          <span>HTML</span>
+                        </div>
+                      )}
+                      <button
+                        className="absolute right-2 top-2 z-10 rounded p-1 text-[var(--color-text-muted)] opacity-40 transition-opacity hover:opacity-100"
+                        onClick={() => handleToggleMode(activeTab.id, currentMode)}
+                        title={nextModeLabel}
+                      >
+                        <NextModeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
                     <div className="flex-1 overflow-hidden">
-                      {activeTab.editMode === 'source' ? (
+                      {currentMode === 'source' && (
                         <SourceEditor
                           content={activeTab.content ?? ''}
                           onChange={(c) => useEditorStore.getState().setContent(activeTab.id, c)}
                         />
-                      ) : (
+                      )}
+                      {currentMode === 'wysiwyg' && (
                         <div className="h-full overflow-y-auto">
-                          <EditorWrapper tabId={activeTab.id} content={activeTab.content ?? ''} editMode={activeTab.editMode} />
+                          <EditorWrapper
+                            tabId={activeTab.id}
+                            content={activeTab.content ?? ''}
+                            editMode="wysiwyg"
+                            onEditorReady={handleEditorReady}
+                          />
                           <LinkAutocomplete editor={editor} />
                           <TableMenu editor={editor} />
                           <ImageUploader editor={editor} />
                         </div>
+                      )}
+                      {currentMode === 'read' && (
+                        <ReadOnlyView content={activeTab.content ?? ''} />
                       )}
                     </div>
                   </>

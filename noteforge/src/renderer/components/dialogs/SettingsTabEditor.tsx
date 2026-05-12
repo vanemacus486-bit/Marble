@@ -111,12 +111,20 @@ export default function SettingsTabEditor({ onSaved }: Props) {
         />
       </SettingRow>
 
+      <SettingRow label="Enable WYSIWYG" description="Enable rich-text editor as a plugin (requires restart)">
+        <ToggleInput
+          checked={local.enableWysiwyg}
+          onChange={(v) => update('enableWysiwyg', v)}
+        />
+      </SettingRow>
+
       <SettingRow label="Default Edit Mode" description="Default editing mode for new tabs">
         <SelectInput
           value={local.defaultEditMode}
           options={[
-            { value: 'wysiwyg', label: 'WYSIWYG' },
             { value: 'source', label: 'Source (HTML)' },
+            { value: 'wysiwyg', label: 'WYSIWYG (Rich Text)' },
+            { value: 'read', label: 'Read (Preview)' },
           ]}
           onChange={(v) => update('defaultEditMode', v)}
         />

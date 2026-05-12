@@ -21,7 +21,8 @@ export interface VaultConfig {
     tabSize: number
     spellcheck: boolean
     autoPairBrackets: boolean
-    defaultEditMode: 'wysiwyg' | 'source'
+    enableWysiwyg: boolean
+    defaultEditMode: 'source' | 'wysiwyg' | 'read'
   }
   graph: {
     showArrows: boolean
@@ -62,7 +63,8 @@ export function defaultVaultConfig(): VaultConfig {
       tabSize: 2,
       spellcheck: true,
       autoPairBrackets: true,
-      defaultEditMode: 'wysiwyg',
+      enableWysiwyg: false,
+      defaultEditMode: 'source',
     },
     graph: {
       showArrows: true,

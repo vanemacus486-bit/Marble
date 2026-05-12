@@ -7,8 +7,8 @@
   "statusbar.words": "字数：{{count}}",
   "statusbar.readingTime": "约 {{time}} 分钟",
   "statusbar.unsaved": "未保存",
-  "statusbar.wysiwyg": "所见即所得",
-  "statusbar.source": "源码",
+  "statusbar.wysiwyg": "编辑",
+  "statusbar.source": "阅读",
 
   "tabbar.unsavedTitle": "未保存的更改",
   "tabbar.unsavedMessage": "您有未保存的更改。关闭前是否保存？",
@@ -56,6 +56,14 @@
 
   "sourceEditor.placeholder": "<h1>在此输入 HTML</h1>",
 
+  "editor.switchToRead": "切换到阅读模式",
+  "editor.switchToEdit": "切换到编辑模式",
+  "editor.switchToSource": "切换到源码模式",
+  "editor.switchToWysiwyg": "切换到可视化模式",
+  "editor.modeSource": "源码",
+  "editor.modeWysiwyg": "编辑",
+  "editor.modeRead": "阅读",
+
   "settings.title": "设置",
   "settings.editor": "编辑器",
   "settings.theme": "外观",
@@ -84,6 +92,8 @@
   "settings.filesAndLinks": "文件与链接",
   "settings.keyboardShortcuts": "快捷键",
   "settings.close": "关闭设置",
+  "settings.enableWysiwyg": "启用可视化编辑器",
+  "settings.enableWysiwygDesc": "将富文本编辑器作为插件启用",
   "settings.defaultEditMode": "默认编辑模式",
   "settings.defaultEditModeDesc": "新标签页的默认编辑模式",
 
@@ -100,9 +110,8 @@
   "settings.serif": "衬线体",
   "settings.monospace": "等宽字体",
   "settings.sourceSerif": "Source Serif",
-  "settings.wysiwyg": "所见即所得",
-  "settings.source": "源码",
-  "settings.split": "分屏",
+  "settings.wysiwyg": "编辑",
+  "settings.source": "阅读",
   "settings.preview": "预览",
 
   "settings.dailyNotes": "每日笔记",

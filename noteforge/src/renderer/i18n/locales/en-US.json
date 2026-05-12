@@ -7,8 +7,8 @@
   "statusbar.words": "Words: {{count}}",
   "statusbar.readingTime": "{{time}} min read",
   "statusbar.unsaved": "Unsaved",
-  "statusbar.wysiwyg": "WYSIWYG",
-  "statusbar.source": "Source",
+  "statusbar.wysiwyg": "Edit",
+  "statusbar.source": "Read",
 
   "tabbar.unsavedTitle": "Unsaved changes",
   "tabbar.unsavedMessage": "You have unsaved changes. Save before closing?",
@@ -56,6 +56,14 @@
 
   "sourceEditor.placeholder": "<h1>Your HTML here</h1>",
 
+  "editor.switchToRead": "Switch to read mode",
+  "editor.switchToEdit": "Switch to edit mode",
+  "editor.switchToSource": "Switch to source mode",
+  "editor.switchToWysiwyg": "Switch to WYSIWYG mode",
+  "editor.modeSource": "Source",
+  "editor.modeWysiwyg": "Edit",
+  "editor.modeRead": "Read",
+
   "settings.title": "Settings",
   "settings.editor": "Editor",
   "settings.theme": "Theme",
@@ -84,6 +92,8 @@
   "settings.filesAndLinks": "Files & Links",
   "settings.keyboardShortcuts": "Keyboard Shortcuts",
   "settings.close": "Close settings",
+  "settings.enableWysiwyg": "Enable WYSIWYG",
+  "settings.enableWysiwygDesc": "Enable rich-text editor as a plugin",
   "settings.defaultEditMode": "Default Edit Mode",
   "settings.defaultEditModeDesc": "Default editing mode for new tabs",
 
@@ -100,9 +110,8 @@
   "settings.serif": "Serif",
   "settings.monospace": "Monospace",
   "settings.sourceSerif": "Source Serif",
-  "settings.wysiwyg": "WYSIWYG",
-  "settings.source": "Source",
-  "settings.split": "Split",
+  "settings.wysiwyg": "Edit",
+  "settings.source": "Read",
   "settings.preview": "Preview",
 
   "settings.dailyNotes": "Daily Notes",

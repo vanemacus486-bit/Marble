@@ -28,7 +28,7 @@ export const DEFAULT_SHORTCUTS: ShortcutDefinition[] = [
 
   // ---- Editor ----
   { id: 'save', label: 'Save note', defaultKeys: { key: 's', ctrl: true }, category: 'editor', description: 'Save the current note' },
-  { id: 'toggle-edit-mode', label: 'Toggle edit mode', defaultKeys: { key: 'e', ctrl: true }, category: 'editor', description: 'Cycle through editor modes' },
+  { id: 'toggle-edit-mode', label: 'Toggle edit mode', defaultKeys: { key: 'e', ctrl: true }, category: 'editor', description: 'Cycle through editor modes (Source / Edit / Read)' },
   { id: 'find', label: 'Find in note', defaultKeys: { key: 'f', ctrl: true }, category: 'editor', description: 'Search within the current note' },
   { id: 'search', label: 'Global search', defaultKeys: { key: 'F', ctrl: true, shift: true }, category: 'editor', description: 'Search across all notes' },
 
