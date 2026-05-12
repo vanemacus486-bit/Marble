@@ -94,6 +94,39 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_GET_APP_CONFIG),
   setAppConfig: (config: Partial<import('../main/types/ipc-contracts').AppConfig>): Promise<void> =>
     ipcRenderer.invoke(IPC_CHANNELS.SYSTEM_SET_APP_CONFIG, config),
+
+  // AI
+  aiChat: (messages: import('../main/types/ipc-contracts').AIChatMessage[]): Promise<void> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_CHAT, messages),
+  aiApproveToolCall: (callId: string): Promise<void> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_APPROVE_TOOL_CALL, callId),
+  aiRejectToolCall: (callId: string): Promise<void> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_REJECT_TOOL_CALL, callId),
+  aiCancel: (): Promise<void> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_CANCEL),
+  aiGetConfig: (): Promise<import('../main/types/ipc-contracts').AIConfig> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_GET_CONFIG),
+  aiSetConfig: (config: Partial<import('../main/types/ipc-contracts').AIConfig>): Promise<void> =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_SET_CONFIG, config),
+  onAiStreamChunk: (callback: (chunk: string) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, chunk: string) => callback(chunk)
+    ipcRenderer.on(IPC_CHANNELS.AI_STREAM_CHUNK, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.AI_STREAM_CHUNK, handler)
+  },
+  onAiToolCallPending: (callback: (pending: import('../main/types/ipc-contracts').AIPendingApproval) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, pending: import('../main/types/ipc-contracts').AIPendingApproval) => callback(pending)
+    ipcRenderer.on(IPC_CHANNELS.AI_TOOL_CALL_PENDING, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.AI_TOOL_CALL_PENDING, handler)
+  },
+  onAiStreamEnd: (callback: () => void): (() => void) => {
+    ipcRenderer.on(IPC_CHANNELS.AI_STREAM_END, callback)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.AI_STREAM_END, callback)
+  },
+  onAiError: (callback: (error: string) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, error: string) => callback(error)
+    ipcRenderer.on(IPC_CHANNELS.AI_ERROR, handler)
+    return () => ipcRenderer.removeListener(IPC_CHANNELS.AI_ERROR, handler)
+  },
 }
 
 contextBridge.exposeInMainWorld('electronAPI', api)

@@ -3,6 +3,7 @@ import { useUiStore } from '../../stores/ui-store'
 import { useEditorStore } from '../../stores/editor-store'
 import { useGraphStore } from '../../stores/graph-store'
 import { useSearchStore } from '../../stores/search-store'
+import { useAiStore } from '../../stores/ai-store'
 import { getEffectiveShortcut, formatShortcutKeys } from '../../config/shortcuts'
 
 interface Command {
@@ -85,6 +86,43 @@ export default function CommandPalette() {
           window.electronAPI.showInFolder(tab.notePath)
         }
         useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
+    {
+      id: 'ai-chat', label: 'AI: Open Chat',
+      action: () => {
+        useUiStore.getState().setLeftSidebarTab('ai')
+        useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
+    {
+      id: 'ai-summarize', label: 'AI: Summarize Current Note',
+      action: () => {
+        const tab = useEditorStore.getState().activeTab()
+        if (tab) {
+          useUiStore.getState().setLeftSidebarTab('ai')
+          useAiStore.getState().sendMessage('Please summarize this note.')
+        }
+        useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
+    {
+      id: 'ai-improve', label: 'AI: Improve Current Note',
+      action: () => {
+        const tab = useEditorStore.getState().activeTab()
+        if (tab) {
+          useUiStore.getState().setLeftSidebarTab('ai')
+          useAiStore.getState().sendMessage('Please suggest improvements for this note. Check for structure, clarity, and completeness.')
+        }
+        useUiStore.getState().setCommandPaletteOpen(false)
+      },
+    },
+    {
+      id: 'ai-create', label: 'AI: Create Note About...',
+      action: () => {
+        useUiStore.getState().setLeftSidebarTab('ai')
+        useUiStore.getState().setCommandPaletteOpen(false)
+        // Focus the AI input for the user to type their request
       },
     },
   ]

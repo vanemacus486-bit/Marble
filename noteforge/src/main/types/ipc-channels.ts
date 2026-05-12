@@ -48,6 +48,18 @@ export const IPC_CHANNELS = {
   EXPORT_HTML: 'export:html',
   EXPORT_HTML_FILE: 'export:html-file',
 
+  // AI
+  AI_CHAT: 'ai:chat',
+  AI_APPROVE_TOOL_CALL: 'ai:approve-tool-call',
+  AI_REJECT_TOOL_CALL: 'ai:reject-tool-call',
+  AI_CANCEL: 'ai:cancel',
+  AI_STREAM_CHUNK: 'ai:stream-chunk',
+  AI_TOOL_CALL_PENDING: 'ai:tool-call-pending',
+  AI_STREAM_END: 'ai:stream-end',
+  AI_ERROR: 'ai:error',
+  AI_GET_CONFIG: 'ai:get-config',
+  AI_SET_CONFIG: 'ai:set-config',
+
   // System
   SYSTEM_GET_VERSION: 'system:get-version',
   SYSTEM_OPEN_EXTERNAL: 'system:open-external',

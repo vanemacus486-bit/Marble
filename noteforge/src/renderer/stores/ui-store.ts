@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type LeftSidebarTab = 'files' | 'search' | 'graph' | 'comp' | 'data' | 'tags'
+export type LeftSidebarTab = 'files' | 'search' | 'graph' | 'comp' | 'data' | 'tags' | 'ai'
 type RightSidebarTab = 'backlinks' | 'outline' | 'properties'
 
 interface UiState {

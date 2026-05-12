@@ -8,6 +8,7 @@ import { SearchIndexer } from './services/search-indexer'
 import { FileWatcher } from './services/file-watcher'
 import { IndexBuilder } from './services/index-builder'
 import { ExportService } from './services/export-service'
+import { AIService } from './services/ai-service'
 import { getDefaultTemplate } from './utils/template-service'
 import { isPathWithinVault } from './utils/path-utils'
 import { IPC_CHANNELS } from './types/ipc-channels'
@@ -23,6 +24,7 @@ let vaultManager: VaultManager | null = null
 let configManager: ConfigManager | null = null
 let fileWatcher: FileWatcher | null = null
 let indexBuilder: IndexBuilder | null = null
+let aiService: AIService | null = null
 
 const noteParser = new NoteParser()
 const searchIndexer = new SearchIndexer()
@@ -89,6 +91,7 @@ async function initVaultServices(vaultPath: string): Promise<void> {
   configManager = new ConfigManager(vaultPath)
   indexBuilder = new IndexBuilder(vaultManager, noteParser, searchIndexer)
   fileWatcher = new FileWatcher(vaultPath, ['.git', 'node_modules', '.marble'])
+  aiService?.setVaultServices(vaultManager, searchIndexer)
 
   // Wire file watcher events to renderer windows and search index
   fileWatcher.onChange((events: FileChangeEvent[]) => {
@@ -264,6 +267,36 @@ function registerAllIpc(): void {
     return !result.canceled
   })
 
+  // AI
+  ipcMain.handle(IPC_CHANNELS.AI_CHAT, (event, messages) => {
+    if (!aiService) throw new Error('AI service not initialized')
+    aiService.chat(event.sender.id, messages)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.AI_APPROVE_TOOL_CALL, (_e, callId: string) => {
+    if (!aiService) throw new Error('AI service not initialized')
+    return aiService.approveToolCall(callId)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.AI_REJECT_TOOL_CALL, (_e, callId: string) => {
+    if (!aiService) throw new Error('AI service not initialized')
+    return aiService.rejectToolCall(callId)
+  })
+
+  ipcMain.handle(IPC_CHANNELS.AI_CANCEL, () => {
+    aiService?.cancel()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.AI_GET_CONFIG, () => {
+    if (!aiService) throw new Error('AI service not initialized')
+    return aiService.getConfig()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.AI_SET_CONFIG, async (_e, partial) => {
+    if (!aiService) throw new Error('AI service not initialized')
+    await aiService.updateConfig(partial)
+  })
+
   // System
   ipcMain.handle(IPC_CHANNELS.SYSTEM_GET_VERSION, () => app.getVersion())
   ipcMain.handle(IPC_CHANNELS.SYSTEM_OPEN_EXTERNAL, async (_e, url: string) => {
@@ -288,6 +321,7 @@ function registerAllIpc(): void {
 app.whenReady().then(async () => {
   Menu.setApplicationMenu(null)
   appStore = await loadAppStore()
+  aiService = new AIService(appStore)
   createWindow()
   registerAllIpc()
 })

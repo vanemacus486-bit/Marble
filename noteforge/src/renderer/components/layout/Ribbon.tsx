@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icons } from '../ui/marble-icons'
 
-export type RibbonTab = 'files' | 'search' | 'graph' | 'comp' | 'data' | 'tags'
+export type RibbonTab = 'files' | 'search' | 'graph' | 'comp' | 'data' | 'tags' | 'ai'
 
 interface RibbonProps {
   active: RibbonTab
@@ -11,6 +11,7 @@ interface RibbonProps {
 const items: Array<[RibbonTab, React.ReactNode, string]> = [
   ['files',  Icons.files,  'Files'],
   ['search', Icons.search, 'Search'],
+  ['ai',     Icons.ai,     'AI'],
   ['graph',  Icons.graph,  'Graph'],
   ['comp',   Icons.comp,   'Components'],
   ['data',   Icons.data,   'Data'],

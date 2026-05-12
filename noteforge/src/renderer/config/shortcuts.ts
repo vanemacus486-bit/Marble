@@ -40,6 +40,7 @@ export const DEFAULT_SHORTCUTS: ShortcutDefinition[] = [
 
   // ---- View ----
   { id: 'toggle-graph', label: 'Toggle graph view', defaultKeys: { key: 'G', ctrl: true, shift: true }, category: 'view', description: 'Show or hide the graph view' },
+  { id: 'toggle-ai-panel', label: 'Toggle AI panel', defaultKeys: { key: 'A', ctrl: true, shift: true }, category: 'view', description: 'Show or hide the AI assistant panel' },
 ]
 
 export function getShortcutById(id: string): ShortcutDefinition | undefined {

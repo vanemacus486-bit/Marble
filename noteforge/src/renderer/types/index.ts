@@ -12,6 +12,11 @@ export type {
   SearchResponse,
   IndexProgress,
   AppConfig,
+  AIConfig,
+  AIChatMessage,
+  AIToolCall,
+  AIPendingApproval,
+  AIDiffPreview,
 } from '../../main/types/ipc-contracts'
 
-export { defaultVaultConfig, defaultAppConfig } from '../../main/types/ipc-contracts'
+export { defaultVaultConfig, defaultAppConfig, defaultAIConfig } from '../../main/types/ipc-contracts'

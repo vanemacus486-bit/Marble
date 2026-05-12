@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Info, FileText, FolderOpen, Palette, Keyboard, X } from 'lucide-react'
+import { Info, FileText, FolderOpen, Palette, Keyboard, X, Sparkles } from 'lucide-react'
 import SettingsTabAbout from './SettingsTabAbout'
 import SettingsTabEditor from './SettingsTabEditor'
 import SettingsTabFilesLinks from './SettingsTabFilesLinks'
 import SettingsTabAppearance from './SettingsTabAppearance'
 import SettingsTabShortcuts from './SettingsTabShortcuts'
+import SettingsTabAI from './SettingsTabAI'
 
 interface SettingsDialogProps {
   onClose: () => void
 }
 
-type SettingsTab = 'about' | 'editor' | 'files-links' | 'appearance' | 'shortcuts'
+type SettingsTab = 'about' | 'editor' | 'files-links' | 'appearance' | 'shortcuts' | 'ai'
 
 export default function SettingsDialog({ onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
@@ -22,6 +23,7 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
     { id: 'files-links', label: t('settings.filesAndLinks'), icon: <FolderOpen style={{ width: 16, height: 16 }} /> },
     { id: 'appearance', label: t('settings.appearance'), icon: <Palette style={{ width: 16, height: 16 }} /> },
     { id: 'shortcuts', label: t('settings.keyboardShortcuts'), icon: <Keyboard style={{ width: 16, height: 16 }} /> },
+    { id: 'ai', label: t('settings.ai'), icon: <Sparkles style={{ width: 16, height: 16 }} /> },
   ]
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('about')
@@ -205,6 +207,7 @@ export default function SettingsDialog({ onClose }: SettingsDialogProps) {
             {activeTab === 'files-links' && <SettingsTabFilesLinks onSaved={showSaved} />}
             {activeTab === 'appearance' && <SettingsTabAppearance onSaved={showSaved} />}
             {activeTab === 'shortcuts' && <SettingsTabShortcuts />}
+            {activeTab === 'ai' && <SettingsTabAI onSaved={showSaved} />}
           </div>
         </div>
       </div>

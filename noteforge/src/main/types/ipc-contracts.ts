@@ -176,12 +176,63 @@ export interface IndexProgress {
 
 // ---- App Config ----
 
+// ---- AI ----
+
+export interface AIConfig {
+  apiKey: string
+  model: string
+  endpoint: string
+  temperature: number
+  maxTokens: number
+}
+
+export function defaultAIConfig(): AIConfig {
+  return {
+    apiKey: '',
+    model: 'deepseek-chat',
+    endpoint: 'https://api.deepseek.com',
+    temperature: 0.7,
+    maxTokens: 4096,
+  }
+}
+
+export interface AIChatMessage {
+  role: 'user' | 'assistant' | 'system' | 'tool'
+  content: string
+  toolCallId?: string
+  toolCalls?: AIToolCall[]
+}
+
+export interface AIToolCall {
+  id: string
+  name: string
+  arguments: Record<string, unknown>
+}
+
+export interface AIPendingApproval {
+  callId: string
+  toolName: string
+  args: Record<string, unknown>
+  preview: AIDiffPreview
+}
+
+export interface AIDiffPreview {
+  type: 'create' | 'write' | 'delete' | 'rename'
+  path: string
+  newPath?: string
+  oldContent?: string
+  newContent?: string
+}
+
+// ---- App Config ----
+
 export interface AppConfig {
   recentVaults: string[]
   lastVaultPath: string | null
   theme: 'light' | 'dark' | 'system'
   windowBounds: { x: number; y: number; width: number; height: number } | null
   locale: string
+  aiConfig?: AIConfig
 }
 
 export function defaultAppConfig(): AppConfig {
@@ -191,5 +242,6 @@ export function defaultAppConfig(): AppConfig {
     theme: 'system',
     windowBounds: null,
     locale: 'en-US',
+    aiConfig: defaultAIConfig(),
   }
 }

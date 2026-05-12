@@ -100,8 +100,18 @@
 ### 多语言
 - 中文（zh-CN）和英语（en-US），基于 i18next
 
+### AI 助手 (v0.5.0)
+基于 OpenAI 兼容 API 的内置 AI 对话面板：
+
+- **Chat 界面**：侧边栏对话面板，支持流式输出
+- **Vault 感知**：AI 可直接读取、搜索、创建、编辑你的笔记
+- **工具调用**：list_files / read_note / search_notes / create_note / edit_note / delete_note / rename_note
+- **Diff 预览**：AI 编辑笔记时展示更改差异，需用户确认后应用
+- **安全模式**：写操作需用户批准，读操作自动执行
+- **多模型支持**：兼容 OpenAI / Anthropic / 本地模型（Ollama 等），在设置中配置
+
 ### 增强设置
-- 五页签设置面板：关于、编辑器、文件与链接、外观、快捷键
+- 六页签设置面板：关于、编辑器、文件与链接、外观、AI、快捷键
 - 可搜索筛选的快捷键重新绑定
 
 ### 快捷键
@@ -116,6 +126,7 @@
 | `Ctrl+S` | 保存 |
 | `Ctrl+W` | 关闭标签 |
 | `Ctrl+,` | 设置 |
+| `Ctrl+L` | AI 对话面板 |
 
 ---
 
@@ -151,6 +162,7 @@ npm run lint         # 代码检查
 | **渲染框架** | React 18 + TypeScript 5.5 |
 | **状态管理** | Zustand 5 |
 | **编辑器** | CodeMirror 6 + TipTap 2.11 / ProseMirror |
+| **AI 集成** | OpenAI SDK (兼容 Anthropic / Ollama 等) |
 | **国际化** | i18next + react-i18next |
 | **样式** | Tailwind CSS v4 + oklch() CSS 自定义属性 |
 | **全文搜索** | FlexSearch 0.7 |

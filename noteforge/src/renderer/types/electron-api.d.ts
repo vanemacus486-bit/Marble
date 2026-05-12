@@ -7,6 +7,9 @@ import type {
   AppConfig,
   VaultConfig,
   IndexProgress,
+  AIChatMessage,
+  AIConfig,
+  AIPendingApproval,
 } from '../../main/types/ipc-contracts'
 
 export interface ElectronAPI {
@@ -48,6 +51,18 @@ export interface ElectronAPI {
 
   // Export
   exportPlaintext(html: string): Promise<string>
+
+  // AI
+  aiChat(messages: AIChatMessage[]): Promise<void>
+  aiApproveToolCall(callId: string): Promise<void>
+  aiRejectToolCall(callId: string): Promise<void>
+  aiCancel(): Promise<void>
+  aiGetConfig(): Promise<AIConfig>
+  aiSetConfig(config: Partial<AIConfig>): Promise<void>
+  onAiStreamChunk(callback: (chunk: string) => void): () => void
+  onAiToolCallPending(callback: (pending: AIPendingApproval) => void): () => void
+  onAiStreamEnd(callback: () => void): () => void
+  onAiError(callback: (error: string) => void): () => void
 
   // System
   getAppVersion(): Promise<string>

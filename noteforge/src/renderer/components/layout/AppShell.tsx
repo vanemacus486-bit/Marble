@@ -30,6 +30,7 @@ import TagPanel from '../panels/TagPanel'
 import BacklinksPanel from '../panels/BacklinksPanel'
 import OutlinePanel from '../panels/OutlinePanel'
 import PropertiesPanel from '../panels/PropertiesPanel'
+import AIChatPanel from '../ai/AIChatPanel'
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { ContextMenuProvider } from '../ui/ContextMenu'
 import type { EditMode } from '../../stores/editor-store'
@@ -146,6 +147,7 @@ export default function AppShell() {
             Data panel
           </div>
         )}
+        {leftSidebarTab === 'ai' && <AIChatPanel />}
       </div>
     )
   }
