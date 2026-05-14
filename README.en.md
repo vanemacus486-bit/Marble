@@ -48,6 +48,10 @@ Marble isn't here to replace Markdown. It's here for the people who've outgrown 
  
 ## ✨ Features
  
+### 🔍 Source split-pane live preview
+
+In source edit mode, toggle a split-pane preview — HTML on the left, rendered output on the right. Sandboxed iframe isolation, CSS variables auto-synced with the theme, 500ms debounce. Write and see what you get, instantly.
+
 ### 📄 Notes are HTML files
  
 Every note is a standard `.html` file in a local folder (your Vault) of your choice. Metadata lives in `<meta>` tags in `<head>` — standard, portable, future-proof. Double-click to open in any browser. Edit in VS Code if you want. **No database, no proprietary format, no migration anxiety.**
@@ -141,7 +145,8 @@ Electron 32 · React 18 · TypeScript 5.5 · Zustand 5 · TipTap (ProseMirror) �
  
 ## 🗺️ Roadmap
  
-- [x] HTML-native editor (Source / WYSIWYG / Reading)
+- [x] HTML-native editor (Source / WYSIWYG / Reading + split live preview)
+- [x] Sandboxed iframe preview + CSS variable theme sync
 - [x] Bi-directional links + backlinks panel
 - [x] Knowledge graph (D3-force)
 - [x] Full-text search with operators
