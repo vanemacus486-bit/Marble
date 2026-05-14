@@ -27,34 +27,51 @@ const ALLOWED_ATTRS = [
   'open',
 ]
 
-const FORBID_TAGS = ['script', 'style', 'object', 'embed', 'applet', 'font']
-const FORBID_ATTR = ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur', 'onchange', 'onsubmit']
+const EXTRA_TAGS = ['style', 'iframe', 'video', 'figure', 'figcaption', 'section', 'nav', 'article', 'html', 'head', 'body', 'meta', 'link']
 
 function createBaseConfig() {
   return {
     ALLOWED_TAGS,
     ALLOWED_ATTR: ALLOWED_ATTRS,
     ALLOW_DATA_ATTR: true,
-    FORBID_TAGS,
-    FORBID_ATTR,
   }
 }
 
 export function sanitizePastedHtml(html: string): string {
   return DOMPurify.sanitize(html, {
     ...createBaseConfig(),
-    ALLOWED_ATTR: ALLOWED_ATTRS.filter((a) => a !== 'style'),
   })
 }
 
 export function sanitizeHtml(html: string): string {
   return DOMPurify.sanitize(html, {
     ...createBaseConfig(),
-    ALLOWED_TAGS: [...ALLOWED_TAGS, 'style', 'iframe', 'video', 'figure', 'figcaption', 'section', 'nav', 'article', 'html', 'head', 'body', 'meta', 'link'],
+    ALLOWED_TAGS: [...ALLOWED_TAGS, ...EXTRA_TAGS],
     ALLOWED_ATTR: [...ALLOWED_ATTRS, 'style', 'sandbox', 'allowfullscreen', 'controls', 'poster', 'autoplay', 'loop', 'muted', 'charset', 'name', 'content'],
-    FORBID_TAGS: ['script', 'object', 'embed', 'applet'],
-    FORBID_ATTR,
     ADD_TAGS: ['style'],
+    ADD_ATTR: ['target'],
+    WHOLE_DOCUMENT: true,
+  })
+}
+
+export function sanitizeHtmlDynamic(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ...createBaseConfig(),
+    ALLOWED_TAGS: [
+      ...ALLOWED_TAGS, ...EXTRA_TAGS,
+      'script', 'source', 'track',
+      'svg', 'path', 'circle', 'rect',
+      'line', 'polyline', 'polygon', 'text', 'g', 'defs', 'use', 'mask', 'canvas',
+    ],
+    ALLOWED_ATTR: [
+      ...ALLOWED_ATTRS,
+      'style', 'sandbox', 'allowfullscreen', 'controls', 'poster', 'autoplay', 'loop', 'muted',
+      'charset', 'name', 'content', 'integrity', 'crossorigin', 'defer', 'async', 'type',
+      'srcset', 'sizes', 'srcdoc',
+      'fill', 'stroke', 'stroke-width', 'viewBox', 'd', 'cx', 'cy', 'r', 'x', 'y', 'dx', 'dy',
+      'xmlns', 'version', 'preserveAspectRatio', 'transform',
+    ],
+    ADD_TAGS: ['style', 'script'],
     ADD_ATTR: ['target'],
     WHOLE_DOCUMENT: true,
   })

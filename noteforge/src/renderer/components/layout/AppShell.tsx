@@ -19,6 +19,7 @@ import SettingsDialog from '../dialogs/SettingsDialog'
 import EditorWrapper from '../editor/EditorWrapper'
 import EditorToolbar from '../editor/EditorToolbar'
 import SourceEditor from '../editor/SourceEditor'
+import DynamicPreview from '../editor/DynamicPreview'
 import ReadOnlyView from '../editor/ReadOnlyView'
 import LinkAutocomplete from '../editor/LinkAutocomplete'
 import FindReplace from '../editor/FindReplace'
@@ -59,7 +60,9 @@ export default function AppShell() {
 
   const [editor, setEditor] = useState<any>(null)
   const toggleEditMode = useEditorStore((s) => s.toggleEditMode)
+  const toggleDynamicPreview = useEditorStore((s) => s.toggleDynamicPreview)
   const enableWysiwyg = useVaultStore((s) => s.config?.editor?.enableWysiwyg) ?? false
+  const [previewSplit, setPreviewSplit] = useState(55)
   const [rightSections, setRightSections] = useState<Record<string, boolean>>({
     backlinks: true,
     outline: true,
@@ -94,7 +97,7 @@ export default function AppShell() {
     return modeOrder[(idx + 1) % modeOrder.length]
   }
 
-  const handleToggleMode = (tabId: string, current: EditMode) => {
+  const handleToggleMode = (tabId: string) => {
     toggleEditMode(tabId, enableWysiwyg)
   }
 
@@ -181,6 +184,19 @@ export default function AppShell() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', height: 28, fontSize: 11, color: 'var(--m-fg-3)' }}>
                         <Code2 size={14} />
                         <span>HTML</span>
+                        <button
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 4,
+                            padding: '2px 8px', borderRadius: 4, fontSize: 11,
+                            color: activeTab?.dynamicPreview ? 'var(--m-vein)' : 'var(--m-fg-3)',
+                            background: activeTab?.dynamicPreview ? 'var(--m-vein-bg)' : 'none',
+                          }}
+                          onClick={() => activeTab && toggleDynamicPreview(activeTab.id)}
+                          title="Toggle dynamic preview"
+                        >
+                          <Eye size={14} />
+                          <span>Preview</span>
+                        </button>
                       </div>
                     )}
                     <button
@@ -189,18 +205,51 @@ export default function AppShell() {
                         borderRadius: 4, padding: 4,
                         color: 'var(--m-fg-3)', opacity: 0.4,
                       }}
-                      onClick={() => handleToggleMode(activeTab.id, currentMode)}
+                      onClick={() => handleToggleMode(activeTab.id)}
                       title={nextModeLabel}
                     >
                       <NextModeIcon size={16} />
                     </button>
                   </div>
                   <div style={{ flex: 1, overflow: 'hidden' }}>
-                    {currentMode === 'source' && (
+                    {currentMode === 'source' && !activeTab?.dynamicPreview && (
                       <SourceEditor
                         content={activeTab.content ?? ''}
                         onChange={(c) => useEditorStore.getState().setContent(activeTab.id, c)}
                       />
+                    )}
+                    {currentMode === 'source' && activeTab?.dynamicPreview && (
+                      <div style={{ display: 'flex', flexDirection: 'row', height: '100%', width: '100%' }}>
+                        <div style={{ width: `${previewSplit}%`, overflow: 'hidden' }}>
+                          <SourceEditor
+                            content={activeTab.content ?? ''}
+                            onChange={(c) => useEditorStore.getState().setContent(activeTab.id, c)}
+                          />
+                        </div>
+                        <div
+                          style={{ width: 4, cursor: 'col-resize', background: 'var(--m-line-soft)', flexShrink: 0 }}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            const startX = e.clientX
+                            const startSplit = previewSplit
+                            const container = (e.target as HTMLElement).parentElement
+                            const containerWidth = container?.offsetWidth ?? 1
+                            const onMove = (ev: MouseEvent) => {
+                              const delta = ((ev.clientX - startX) / containerWidth) * 100
+                              setPreviewSplit(Math.max(20, Math.min(80, startSplit + delta)))
+                            }
+                            const onUp = () => {
+                              document.removeEventListener('mousemove', onMove)
+                              document.removeEventListener('mouseup', onUp)
+                            }
+                            document.addEventListener('mousemove', onMove)
+                            document.addEventListener('mouseup', onUp)
+                          }}
+                        />
+                        <div style={{ flex: 1, overflow: 'hidden' }}>
+                          <DynamicPreview html={activeTab.content ?? ''} allowScripts={false} />
+                        </div>
+                      </div>
                     )}
                     {currentMode === 'wysiwyg' && (
                       <div style={{ height: '100%', overflowY: 'auto' }}>

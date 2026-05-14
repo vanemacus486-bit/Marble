@@ -5,7 +5,6 @@ import { html } from '@codemirror/lang-html'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { search, searchKeymap } from '@codemirror/search'
 import { foldGutter, foldKeymap } from '@codemirror/language'
-import { oneDark } from '@codemirror/theme-one-dark'
 import type { EditorSyncManager } from '../../editor/EditorSyncManager'
 
 interface SourceEditorProps {
@@ -26,12 +25,14 @@ export default function SourceEditor({ content, onChange, syncManager }: SourceE
   const containerRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const syncingRef = useRef(false)
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
 
   const debouncedOnChange = useCallback(
     debounce((value: string) => {
-      onChange(value)
+      onChangeRef.current(value)
     }, 250),
-    [onChange]
+    []
   )
 
   useEffect(() => {

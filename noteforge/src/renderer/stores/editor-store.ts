@@ -12,6 +12,7 @@ interface EditorTab {
   content: string | null
   savedContent: string | null
   scrollPosition: { top: number; left: number }
+  dynamicPreview: boolean
 }
 
 interface SplitPaneLayout {
@@ -45,6 +46,8 @@ interface EditorState {
   // Mode
   setEditMode: (tabId: string, mode: EditMode) => void
   toggleEditMode: (tabId: string, enableWysiwyg?: boolean) => void
+  setDynamicPreview: (tabId: string, enabled: boolean) => void
+  toggleDynamicPreview: (tabId: string) => void
 
   // Split pane
   createSplit: (tabId: string, orientation: 'horizontal' | 'vertical') => void
@@ -94,6 +97,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       content,
       savedContent: content,
       scrollPosition: { top: 0, left: 0 },
+      dynamicPreview: false,
     }
     set((s) => ({
       tabs: [...s.tabs, tab],
@@ -180,6 +184,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         const idx = order.indexOf(t.editMode)
         return { ...t, editMode: order[(idx + 1) % order.length] }
       }),
+    }))
+  },
+
+  setDynamicPreview: (tabId, enabled) => {
+    set((s) => ({
+      tabs: s.tabs.map((t) =>
+        t.id === tabId ? { ...t, dynamicPreview: enabled } : t
+      ),
+    }))
+  },
+
+  toggleDynamicPreview: (tabId) => {
+    set((s) => ({
+      tabs: s.tabs.map((t) =>
+        t.id === tabId ? { ...t, dynamicPreview: !t.dynamicPreview } : t
+      ),
     }))
   },
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sanitizePastedHtml, sanitizeHtml } from '../../../src/renderer/utils/sanitizer'
+import { sanitizePastedHtml, sanitizeHtml, sanitizeHtmlDynamic } from '../../../src/renderer/utils/sanitizer'
 
 describe('sanitizer', () => {
   describe('sanitizePastedHtml', () => {
@@ -73,6 +73,90 @@ describe('sanitizer', () => {
     it('strips event handlers', () => {
       const result = sanitizeHtml('<p onclick="evil()">Text</p>')
       expect(result).not.toContain('onclick')
+    })
+  })
+
+  describe('sanitizeHtmlDynamic', () => {
+    it('preserves script tags', () => {
+      const result = sanitizeHtmlDynamic('<script>console.log("hello")</script>')
+      expect(result).toContain('<script>')
+      expect(result).toContain('console.log')
+    })
+
+    it('strips event handlers even with scripts allowed', () => {
+      const result = sanitizeHtmlDynamic('<div onclick="evil()">Content</div>')
+      expect(result).not.toContain('onclick')
+      expect(result).toContain('Content')
+    })
+
+    it('strips onerror handlers on images', () => {
+      const result = sanitizeHtmlDynamic('<img src="x" onerror="alert(1)">')
+      expect(result).not.toContain('onerror')
+    })
+
+    it('removes object tags', () => {
+      const result = sanitizeHtmlDynamic('<object data="evil.swf"></object>')
+      expect(result).not.toContain('object')
+    })
+
+    it('removes embed tags', () => {
+      const result = sanitizeHtmlDynamic('<embed src="evil.swf">')
+      expect(result).not.toContain('embed')
+    })
+
+    it('removes applet tags', () => {
+      const result = sanitizeHtmlDynamic('<applet code="evil.class"></applet>')
+      expect(result).not.toContain('applet')
+    })
+
+    it('removes base tags', () => {
+      const result = sanitizeHtmlDynamic('<base href="https://evil.com">')
+      expect(result).not.toContain('base')
+    })
+
+    it('preserves style tags', () => {
+      const result = sanitizeHtmlDynamic('<style>body { color: red; }</style>')
+      expect(result).toContain('<style>')
+      expect(result).toContain('color: red')
+    })
+
+    it('preserves iframe tags', () => {
+      const result = sanitizeHtmlDynamic('<iframe src="https://example.com"></iframe>')
+      expect(result).toContain('<iframe')
+    })
+
+    it('preserves link tags', () => {
+      const result = sanitizeHtmlDynamic('<link rel="stylesheet" href="style.css">')
+      expect(result).toContain('style.css')
+    })
+
+    it('preserves video tags', () => {
+      const result = sanitizeHtmlDynamic('<video controls><source src="vid.mp4"></video>')
+      expect(result).toContain('<video')
+      expect(result).toContain('vid.mp4')
+    })
+
+    it('preserves inline script with complex content', () => {
+      const result = sanitizeHtmlDynamic('<script>\n  function test() {\n    return 42;\n  }\n</script>')
+      expect(result).toContain('function test')
+      expect(result).toContain('return 42')
+    })
+
+    it('handles script src references', () => {
+      const result = sanitizeHtmlDynamic('<script src="https://cdn.example.com/lib.js"></script>')
+      expect(result).toContain('src="https://cdn.example.com/lib.js"')
+    })
+
+    it('preserves canvas and svg elements', () => {
+      const result = sanitizeHtmlDynamic('<canvas id="c"></canvas><svg><circle cx="50" cy="50" r="40"/></svg>')
+      expect(result).toContain('<canvas')
+      expect(result).toContain('<circle')
+    })
+
+    it('removes script tags from non-dynamic sanitizeHtml', () => {
+      const result = sanitizeHtml('<script>bad()</script><p>Safe</p>')
+      expect(result).not.toContain('script')
+      expect(result).toContain('Safe')
     })
   })
 })
