@@ -1,0 +1,12 @@
+node_modules/
+dist/
+out/
+
+# 构建时自动生成
+src/renderer/build-info.json
+src/renderer/vendor/
+
+# 杂项
+.DS_Store
+Thumbs.db
+.omc/

@@ -1,0 +1,48 @@
+{
+  "name": "marble",
+  "version": "0.3.0",
+  "description": "Marble — 「AI 写、你看」桌面笔记应用（Vue 3 + Naive UI + Electron）",
+  "main": "src/main/main.js",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "gen:buildinfo": "node scripts/gen-build-info.js",
+    "build:renderer": "vite build",
+    "dev:renderer": "vite",
+    "prestart": "npm run gen:buildinfo && npm run build:renderer",
+    "start": "electron .",
+    "predist": "npm run gen:buildinfo && npm run build:renderer",
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
+    "naive-ui": "^2.40.1",
+    "vis-data": "^8.0.3",
+    "vis-network": "^10.1.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "electron": "^31.7.6",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.4.11"
+  },
+  "build": {
+    "appId": "com.marble.notes",
+    "productName": "Marble",
+    "files": [
+      "src/main/**/*",
+      "out/renderer/**/*",
+      "src/renderer/build-info.json",
+      "package.json",
+      "CHANGELOG.md"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
