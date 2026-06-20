@@ -37,7 +37,9 @@ onMounted(() => {
     <n-message-provider>
       <n-dialog-provider>
         <div class="root" :class="store.theme">
-          <welcome-screen v-if="!store.ready" />
+          <!-- 启动占位：配置加载完成前显示纯色背景，消除 WelcomeScreen 闪烁 -->
+          <div v-if="!store.booted" class="boot-placeholder"></div>
+          <welcome-screen v-else-if="!store.ready" />
           <div v-else class="app-shell" :class="{ 'sidebar-collapsed': store.sidebarCollapsed }">
             <!-- 顶部通栏（tabbar） -->
             <title-tab-bar />
@@ -93,4 +95,11 @@ onMounted(() => {
 ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* 启动占位：配置加载时的中性纯色背景，不渲染任何内容 */
+.boot-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #1e1e1e;
+}
 </style>

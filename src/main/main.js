@@ -14,6 +14,7 @@ function createWindow() {
     height: 820,
     minWidth: 880,
     minHeight: 560,
+    show: false,
     backgroundColor: '#1e1e1e',
     autoHideMenuBar: true,
     title: 'Marble',
@@ -25,6 +26,9 @@ function createWindow() {
       sandbox: false,
     },
   });
+
+  // 窗口准备好后再显示，避免白屏闪烁
+  mainWindow.once('ready-to-show', () => mainWindow.show());
 
   // 推送最大化/还原状态给渲染层
   mainWindow.on('maximize', () => {

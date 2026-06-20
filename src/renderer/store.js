@@ -5,6 +5,7 @@ const api = window.api;
 
 export const store = reactive({
   config: null,
+  booted: false,
   ready: false,
   root: null,
   tree: [],
@@ -159,22 +160,26 @@ function applyAppearance() {
 }
 
 export async function bootApp() {
-  store.config = await api.config.get();
-  store.appearance = { ...store.appearance, ...(store.config.appearance || {}) };
-  applyAppearance();
-  // 「自动」主题时跟随系统明暗变化
-  if (!bootApp._mq) {
-    bootApp._mq = window.matchMedia('(prefers-color-scheme: dark)');
-    bootApp._mq.addEventListener('change', () => {
-      if (store.appearance.theme === 'auto') applyAppearance();
-    });
+  try {
+    store.config = await api.config.get();
+    store.appearance = { ...store.appearance, ...(store.config.appearance || {}) };
+    applyAppearance();
+    // 「自动」主题时跟随系统明暗变化
+    if (!bootApp._mq) {
+      bootApp._mq = window.matchMedia('(prefers-color-scheme: dark)');
+      bootApp._mq.addEventListener('change', () => {
+        if (store.appearance.theme === 'auto') applyAppearance();
+      });
+    }
+    if (store.config.vaultPath) {
+      store.ready = true;
+      await loadTree();
+    }
+    // 加载插件配置
+    store.plugins = { ...store.plugins, ...(store.config.plugins || {}) };
+  } finally {
+    store.booted = true;
   }
-  if (store.config.vaultPath) {
-    store.ready = true;
-    await loadTree();
-  }
-  // 加载插件配置
-  store.plugins = { ...store.plugins, ...(store.config.plugins || {}) };
 }
 
 export async function chooseVault() {
